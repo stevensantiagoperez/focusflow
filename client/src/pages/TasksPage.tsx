@@ -43,69 +43,88 @@ export default function TasksPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-100">
-        <p className="text-lg">Loading tasks...</p>
+      <div className="flex items-center justify-center py-20">
+        <p className="text-lg text-slate-200">Loading tasks...</p>
       </div>
     );
   }
 
+  const totalTasks = tasks.length;
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <h1 className="text-3xl font-semibold mb-6 text-center">
-          FocusFlow Tasks
-        </h1>
+    <div className="space-y-5">
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
+      </div>
 
-        {error && (
-          <p className="mb-4 text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
-            Error: {error}
+      {/* Stats card */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Total tasks
           </p>
-        )}
-
-        <form
-          onSubmit={handleAddTask}
-          className="mb-5 flex gap-2 items-center"
-        >
-          <input
-            type="text"
-            placeholder="New task title"
-            value={newTitle}
-            onChange={(e) => setNewTitle(e.target.value)}
-            className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-500 transition-colors disabled:opacity-50"
-            disabled={!newTitle.trim()}
-          >
-            Add
-          </button>
-        </form>
-
-        <div className="bg-slate-900/60 border border-slate-800 rounded-xl shadow-lg p-3">
-          {tasks.length === 0 ? (
-            <p className="text-sm text-slate-400 text-center py-4">
-              No tasks yet. Add your first one to get started.
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {tasks.map((task) => (
-                <li
-                  key={task.id}
-                  className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
-                >
-                  <span className="text-sm">{task.title}</span>
-                  <button
-                    onClick={() => handleDelete(task.id)}
-                    className="text-xs text-red-300 hover:text-red-200 hover:underline"
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {totalTasks}
+          </p>
         </div>
+        {/* placeholders for future stats */}
+        <div className="rounded-xl border border-dashed border-slate-800/60 bg-slate-900/30 px-4 py-3 text-sm text-slate-500 flex items-center justify-center">
+          Future: completed tasks
+        </div>
+        <div className="rounded-xl border border-dashed border-slate-800/60 bg-slate-900/30 px-4 py-3 text-sm text-slate-500 flex items-center justify-center">
+          Future: focus minutes
+        </div>
+      </div>
+
+      {error && (
+        <p className="text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
+          Error: {error}
+        </p>
+      )}
+
+      <form
+        onSubmit={handleAddTask}
+        className="mt-2 mb-4 flex flex-col sm:flex-row gap-2"
+      >
+        <input
+          type="text"
+          placeholder="New task title"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+        />
+        <button
+          type="submit"
+          className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-500 transition-colors disabled:opacity-50"
+          disabled={!newTitle.trim()}
+        >
+          Add Task
+        </button>
+      </form>
+
+      <div className="bg-slate-900/60 border border-slate-800 rounded-xl shadow-lg p-3">
+        {tasks.length === 0 ? (
+          <p className="text-sm text-slate-400 text-center py-4">
+            No tasks yet. Add your first one to get started.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {tasks.map((task) => (
+              <li
+                key={task.id}
+                className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
+              >
+                <span className="text-sm">{task.title}</span>
+                <button
+                  onClick={() => handleDelete(task.id)}
+                  className="text-xs text-red-300 hover:text-red-200 hover:underline"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
