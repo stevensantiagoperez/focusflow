@@ -12,7 +12,6 @@ export default function TasksPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load tasks on mount
   useEffect(() => {
     getTasks()
       .then((data) => setTasks(data))
@@ -42,52 +41,72 @@ export default function TasksPage() {
     }
   }
 
-  if (loading) return <div style={{ padding: 20 }}>Loading tasks...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-slate-100">
+        <p className="text-lg">Loading tasks...</p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: 20, maxWidth: 500, margin: "0 auto" }}>
-      <h1 style={{ fontSize: 24, fontWeight: "bold", marginBottom: 12 }}>
-        Tasks
-      </h1>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <h1 className="text-3xl font-semibold mb-6 text-center">
+          FocusFlow Tasks
+        </h1>
 
-      {error && (
-        <p style={{ color: "red", marginBottom: 12 }}>
-          Error: {error}
-        </p>
-      )}
+        {error && (
+          <p className="mb-4 text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
+            Error: {error}
+          </p>
+        )}
 
-      <form onSubmit={handleAddTask} style={{ marginBottom: 16 }}>
-        <input
-          type="text"
-          placeholder="New task title"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          style={{ padding: 8, width: "70%", marginRight: 8 }}
-        />
-        <button type="submit" style={{ padding: "8px 16px" }}>
-          Add Task
-        </button>
-      </form>
-
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {tasks.map((task) => (
-          <li
-            key={task.id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: 8,
-              padding: 8,
-              border: "1px solid #ddd",
-              borderRadius: 4,
-            }}
+        <form
+          onSubmit={handleAddTask}
+          className="mb-5 flex gap-2 items-center"
+        >
+          <input
+            type="text"
+            placeholder="New task title"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            className="flex-1 rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+          />
+          <button
+            type="submit"
+            className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-500 transition-colors disabled:opacity-50"
+            disabled={!newTitle.trim()}
           >
-            <span>{task.title}</span>
-            <button onClick={() => handleDelete(task.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+            Add
+          </button>
+        </form>
+
+        <div className="bg-slate-900/60 border border-slate-800 rounded-xl shadow-lg p-3">
+          {tasks.length === 0 ? (
+            <p className="text-sm text-slate-400 text-center py-4">
+              No tasks yet. Add your first one to get started.
+            </p>
+          ) : (
+            <ul className="space-y-2">
+              {tasks.map((task) => (
+                <li
+                  key={task.id}
+                  className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
+                >
+                  <span className="text-sm">{task.title}</span>
+                  <button
+                    onClick={() => handleDelete(task.id)}
+                    className="text-xs text-red-300 hover:text-red-200 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
