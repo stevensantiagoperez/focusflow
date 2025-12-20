@@ -1,10 +1,10 @@
 import { useEffect, useState, FormEvent } from "react";
 import { getTasks, createTask, deleteTask } from "../services/apiClient";
 
-type Task = {
-  id: number;
-  title: string;
-};
+type Task = { id: number; 
+            title: string; 
+            completed: boolean };
+
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
