@@ -6,11 +6,13 @@ const router = Router();
 type Task = {
   id: number;
   title: string;
+  completed: boolean;
 };
 
 let tasks: Task[] = [
-  { id: 1, title: "Test task from server" },
+  { id: 1, title: "Test task from server", completed: false },
 ];
+
 
 // GET /api/tasks - list all tasks
 router.get("/", (req, res) => {
