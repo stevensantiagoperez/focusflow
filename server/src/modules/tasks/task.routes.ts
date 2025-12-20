@@ -47,4 +47,18 @@ router.delete("/:id", (req, res) => {
   res.status(204).send(); // no content
 });
 
+router.patch("/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const { completed, title } = req.body;
+
+  const task = tasks.find((t) => t.id === id);
+  if (!task) return res.status(404).json({ message: "Task not found" });
+
+  if (typeof completed === "boolean") task.completed = completed;
+  if (typeof title === "string") task.title = title;
+
+  res.json(task);
+});
+
+
 export default router;
