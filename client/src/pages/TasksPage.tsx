@@ -1,5 +1,5 @@
 import { useEffect, useState, FormEvent } from "react";
-import { getTasks, createTask, deleteTask } from "../services/apiClient";
+import { getTasks, createTask, deleteTask, updateTask } from "../services/apiClient";
 
 type Task = { id: number; 
             title: string; 
@@ -40,6 +40,15 @@ export default function TasksPage() {
       setError(err.message || "Failed to delete task");
     }
   }
+
+  async function handleToggle(task: Task) {
+  try {
+    const updated = await updateTask(task.id, { completed: !task.completed });
+    setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
+  } catch (err: any) {
+    setError(err.message || "Failed to update task");
+  }
+}
 
   if (loading) {
     return (
