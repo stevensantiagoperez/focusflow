@@ -27,11 +27,8 @@ router.post("/", (req, res) => {
     return res.status(400).json({ message: "Title is required" });
   }
 
-  const newTask: Task = {
-    id: Date.now(), // simple id generator for now
-    title,
-  };
-
+  const newTask: Task = { id: Date.now(), 
+    title, completed: false };
   tasks.push(newTask);
   res.status(201).json(newTask);
 });
