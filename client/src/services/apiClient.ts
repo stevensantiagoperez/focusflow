@@ -27,3 +27,15 @@ export async function deleteTask(id: number) {
   }
 }
 
+export async function updateTask(id: number, updates: Partial<{ title: string; completed: boolean }>) {
+  const res = await fetch(`${API_URL}/api/tasks/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) throw new Error("Failed to update task");
+  return res.json();
+}
+
+
