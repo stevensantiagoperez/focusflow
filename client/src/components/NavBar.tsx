@@ -1,19 +1,10 @@
-type Page = "tasks" | "timer" | "dashboard";
+import { NavLink } from "react-router-dom";
 
-export default function Navbar({
-  activePage,
-  onNavigate,
-}: {
-  activePage: Page;
-  onNavigate: (page: Page) => void;
-}) {
-  const linkClass = (page: Page) =>
-    `text-sm transition-colors ${
-      activePage === page
-        ? "text-slate-100"
-        : "text-slate-400 hover:text-slate-100"
-    }`;
+const linkBase =
+  "text-sm text-slate-400 hover:text-slate-100 transition-colors";
+const linkActive = "text-sm text-violet-300";
 
+export default function NavBar() {
   return (
     <header className="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
       <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -22,18 +13,15 @@ export default function Navbar({
         </span>
 
         <nav className="flex items-center gap-4">
-          <button className={linkClass("tasks")} onClick={() => onNavigate("tasks")}>
+          <NavLink to="/" end className={({ isActive }) => (isActive ? linkActive : linkBase)}>
             Tasks
-          </button>
-          <button className={linkClass("timer")} onClick={() => onNavigate("timer")}>
+          </NavLink>
+          <NavLink to="/timer" className={({ isActive }) => (isActive ? linkActive : linkBase)}>
             Timer
-          </button>
-          <button
-            className={linkClass("dashboard")}
-            onClick={() => onNavigate("dashboard")}
-          >
+          </NavLink>
+          <NavLink to="/dashboard" className={({ isActive }) => (isActive ? linkActive : linkBase)}>
             Dashboard
-          </button>
+          </NavLink>
         </nav>
       </div>
     </header>

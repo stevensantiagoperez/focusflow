@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Navbar from "./components/Navbar";
+import NavBar from "./components/NavBar";
 import TasksPage from "./pages/TasksPage";
 import TimerPage from "./pages/TimerPage";
 
@@ -10,7 +10,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
-      <Navbar activePage={page} onNavigate={setPage} />
+      <NavBar activePage={page} onNavigate={setPage} />
       <main className="max-w-3xl mx-auto px-4 py-8">
         {page === "tasks" && <TasksPage />}
         {page === "timer" && <TimerPage />}
