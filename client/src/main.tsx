@@ -6,7 +6,6 @@ import "./index.css";
 import AppLayout from "./layouts/AppLayout";
 import TasksPage from "./pages/TasksPage";
 import TimerPage from "./pages/TimerPage";
-import DashboardPage from "./pages/DashboardPage";
 
 const router = createBrowserRouter([
   {
@@ -15,7 +14,6 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <TasksPage /> },
       { path: "timer", element: <TimerPage /> },
-      { path: "dashboard", element: <DashboardPage /> },
     ],
   },
 ]);
