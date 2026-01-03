@@ -2,7 +2,8 @@ import { NavLink } from "react-router-dom";
 
 const linkBase =
   "text-sm text-slate-400 hover:text-slate-100 transition-colors";
-const linkActive = "text-sm text-violet-300";
+
+const linkActive = "text-slate-100";
 
 export default function NavBar() {
   return (
@@ -13,13 +14,25 @@ export default function NavBar() {
         </span>
 
         <nav className="flex items-center gap-4">
-          <NavLink to="/" end className={({ isActive }) => (isActive ? linkActive : linkBase)}>
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `${linkBase} ${isActive ? linkActive : ""}`}
+          >
             Tasks
           </NavLink>
-          <NavLink to="/timer" className={({ isActive }) => (isActive ? linkActive : linkBase)}>
+
+          <NavLink
+            to="/timer"
+            className={({ isActive }) => `${linkBase} ${isActive ? linkActive : ""}`}
+          >
             Timer
           </NavLink>
-          <NavLink to="/dashboard" className={({ isActive }) => (isActive ? linkActive : linkBase)}>
+
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => `${linkBase} ${isActive ? linkActive : ""}`}
+          >
             Dashboard
           </NavLink>
         </nav>
