@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { addSession } from "../utils/sessions";
+
 
 type Mode = "focus" | "break";
 
