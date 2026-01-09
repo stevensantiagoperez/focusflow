@@ -14,7 +14,7 @@ export default function NavBar() {
         </span>
 
         <nav className="flex items-center gap-4">
-          <NavLink to="/" className={linkClass} end>
+          <NavLink to="/" end className={linkClass}>
             Tasks
           </NavLink>
           <NavLink to="/timer" className={linkClass}>
