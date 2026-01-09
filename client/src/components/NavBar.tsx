@@ -20,6 +20,9 @@ export default function NavBar() {
           <NavLink to="/timer" className={linkClass}>
             Timer
           </NavLink>
+          <NavLink to="/dashboard" className={linkClass}>
+            Dashboard
+          </NavLink>
         </nav>
       </div>
     </header>
