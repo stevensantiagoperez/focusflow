@@ -46,7 +46,7 @@ export default function TimerPage() {
     if (!isRunning) return;
 
     intervalRef.current = window.setInterval(() => {
-      setSecondsLeft((prev) => prev - 1);
+      setSecondsLeft((prev) => Math.max(0, prev - 1));
     }, 1000);
 
     return () => {
