@@ -225,6 +225,17 @@ const streakDays = useMemo(() => {
   </div>
 </div>
 
+<button
+  onClick={() => {
+    clearSessions();
+    setSessionRefresh((n) => n + 1);
+  }}
+  className="text-xs text-slate-400 hover:text-slate-100 underline"
+>
+  Clear focus sessions (debug)
+</button>
+
+
     </div>
   );
 }
