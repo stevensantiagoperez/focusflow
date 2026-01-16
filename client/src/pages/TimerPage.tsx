@@ -170,6 +170,7 @@ export default function TimerPage() {
               min={1}
               max={180}
               value={focusMinutes}
+              disabled={isRunning}
               onChange={(e) => setFocusMinutes(Number(e.target.value))}
               className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
@@ -182,6 +183,7 @@ export default function TimerPage() {
               min={1}
               max={60}
               value={breakMinutes}
+              disabled={isRunning}
               onChange={(e) => setBreakMinutes(Number(e.target.value))}
               className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
             />
