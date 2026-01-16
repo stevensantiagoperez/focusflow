@@ -57,15 +57,22 @@ export default function TimerPage() {
 
   // When timer hits 0, auto switch modes
   useEffect(() => {
-    if (!isRunning) return;
-    if (secondsLeft > 0) return;
+  if (!isRunning) return;
+  if (secondsLeft > 0) return;
 
-    // stop interval
-    setIsRunning(false);
+  // If a focus session just finished, store it
+  if (mode === "focus") {
+    addSession({
+      id: crypto.randomUUID(),
+      mode: "focus",
+      durationSeconds: focusMinutes * 60,
+      endedAt: new Date().toISOString(),
+    });
+  }
 
-    // Switch mode
-    setMode((prev) => (prev === "focus" ? "break" : "focus"));
-  }, [secondsLeft, isRunning]);
+  setIsRunning(false);
+  setMode((prev) => (prev === "focus" ? "break" : "focus"));
+}, [secondsLeft, isRunning, mode, focusMinutes]);
 
   function toggleStartPause() {
     setIsRunning((r) => !r);
