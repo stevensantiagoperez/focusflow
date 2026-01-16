@@ -207,6 +207,24 @@ const streakDays = useMemo(() => {
           minutes per day + streaks here.
         </p>
       </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <p className="text-xs uppercase tracking-wide text-slate-400">Focus minutes (today)</p>
+    <p className="mt-1 text-2xl font-semibold text-slate-50">{minutesToday}</p>
+  </div>
+
+  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <p className="text-xs uppercase tracking-wide text-slate-400">Focus sessions (today)</p>
+    <p className="mt-1 text-2xl font-semibold text-slate-50">{sessionsToday}</p>
+  </div>
+
+  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <p className="text-xs uppercase tracking-wide text-slate-400">Streak (days)</p>
+    <p className="mt-1 text-2xl font-semibold text-slate-50">{streakDays}</p>
+  </div>
+</div>
+
     </div>
   );
 }
