@@ -19,6 +19,50 @@ function dayKey(d: Date) {
 
 
 export default function DashboardPage() {
+
+    const [sessionRefresh, setSessionRefresh] = useState(0);
+
+const focusSessions = useMemo(() => {
+  const all = loadSessions();
+  return all.filter((s) => s.mode === "focus");
+}, [sessionRefresh]);
+
+const todayKey = dayKey(new Date());
+
+const minutesToday = useMemo(() => {
+  return Math.round(
+    focusSessions
+      .filter((s) => dayKey(new Date(s.endedAt)) === todayKey)
+      .reduce((sum, s) => sum + s.durationSeconds, 0) / 60
+  );
+}, [focusSessions, todayKey]);
+
+const sessionsToday = useMemo(() => {
+  return focusSessions.filter((s) => dayKey(new Date(s.endedAt)) === todayKey).length;
+}, [focusSessions, todayKey]);
+
+const streakDays = useMemo(() => {
+  // streak = consecutive days (including today) with at least 1 focus session
+  const byDay = new Map<string, number>();
+  for (const s of focusSessions) {
+    const k = dayKey(new Date(s.endedAt));
+    byDay.set(k, (byDay.get(k) ?? 0) + 1);
+  }
+
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const k = dayKey(d);
+    if ((byDay.get(k) ?? 0) > 0) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}, [focusSessions]);
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
