@@ -83,6 +83,32 @@ export default function TimerPage() {
   if (!isRunning) return;
   if (secondsLeft > 0) return;
 
+  async function finalize() {
+    setIsRunning(false);
+
+    // Save only focus sessions
+    if (mode === "focus") {
+      setSaveError(null);
+      try {
+        await createSession({
+          id: crypto.randomUUID(),
+          taskId: selectedTaskId,
+          mode: "focus",
+          durationSeconds: focusMinutes * 60,
+          endedAt: new Date().toISOString(),
+        });
+      } catch (e: any) {
+        setSaveError(e?.message || "Failed to save session");
+      }
+    }
+
+    setMode((prev) => (prev === "focus" ? "break" : "focus"));
+  }
+
+  finalize();
+}, [secondsLeft, isRunning, mode, focusMinutes, selectedTaskId]);
+
+
   // If a focus session just finished, store it
   if (mode === "focus") {
     addSession({
