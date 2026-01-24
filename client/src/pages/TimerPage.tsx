@@ -43,6 +43,20 @@ export default function TimerPage() {
     return Math.min(1, Math.max(0, secondsLeft / total));
   }, [secondsLeft, totalSecondsForMode]);
 
+  useEffect(() => {
+  getTasks()
+    .then((data) => {
+      setTasks(data);
+      // default to first incomplete task if available
+      const firstOpen = data.find((t: Task) => !t.completed);
+      if (firstOpen) setSelectedTaskId(firstOpen.id);
+    })
+    .catch(() => {
+      // timer can still work without tasks
+    });
+}, []);
+
+
   // When mode/durations change AND timer isn't running, reset secondsLeft to match
   useEffect(() => {
     if (!isRunning) {
