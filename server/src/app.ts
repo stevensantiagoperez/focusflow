@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import taskRoutes from "./modules/tasks/task.routes";
+import sessionRoutes from "./modules/sessions/session.routes";
+
 
 const app = express();
 
@@ -12,5 +14,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/tasks", taskRoutes);
+app.use("/api/sessions", sessionRoutes);
 
 export default app;
