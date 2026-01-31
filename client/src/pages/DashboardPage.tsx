@@ -129,33 +129,22 @@ const streakDays = useMemo(() => {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Total tasks
-          </p>
-          <p className="mt-1 text-2xl font-semibold text-slate-50">
-            {totalTasks}
-          </p>
-        </div>
+  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <p className="text-xs uppercase tracking-wide text-slate-400">Focus minutes (today)</p>
+    <p className="mt-1 text-2xl font-semibold text-slate-50">{minutesToday}</p>
+  </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Completed
-          </p>
-          <p className="mt-1 text-2xl font-semibold text-slate-50">
-            {completedCount}
-          </p>
-        </div>
+  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <p className="text-xs uppercase tracking-wide text-slate-400">Focus sessions (today)</p>
+    <p className="mt-1 text-2xl font-semibold text-slate-50">{sessionsToday}</p>
+  </div>
 
-        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Remaining
-          </p>
-          <p className="mt-1 text-2xl font-semibold text-slate-50">
-            {incompleteCount}
-          </p>
-        </div>
-      </div>
+  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+    <p className="text-xs uppercase tracking-wide text-slate-400">Streak (days)</p>
+    <p className="mt-1 text-2xl font-semibold text-slate-50">{streakDays}</p>
+  </div>
+</div>
+
 
       {/* Recent tasks */}
       <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">

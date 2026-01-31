@@ -2,14 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { addSession } from "../utils/sessions";
 import { createSession, getTasks } from "../services/apiClient";
 
-
 type Task = { id: number; title: string; completed: boolean };
-
-const [tasks, setTasks] = useState<Task[]>([]);
-const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
-const [saveError, setSaveError] = useState<string | null>(null);
-
-
 
 type Mode = "focus" | "break";
 
@@ -24,12 +17,16 @@ function formatMMSS(totalSeconds: number) {
 }
 
 export default function TimerPage() {
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const [mode, setMode] = useState<Mode>("focus");
   const [focusMinutes, setFocusMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
 
   const [isRunning, setIsRunning] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(focusMinutes * 60);
+  const [secondsLeft, setSecondsLeft] = useState(() => focusMinutes * 60);
 
   const intervalRef = useRef<number | null>(null);
 
@@ -44,18 +41,17 @@ export default function TimerPage() {
   }, [secondsLeft, totalSecondsForMode]);
 
   useEffect(() => {
-  getTasks()
-    .then((data) => {
-      setTasks(data);
-      // default to first incomplete task if available
-      const firstOpen = data.find((t: Task) => !t.completed);
-      if (firstOpen) setSelectedTaskId(firstOpen.id);
-    })
-    .catch(() => {
-      // timer can still work without tasks
-    });
-}, []);
-
+    getTasks()
+      .then((data) => {
+        setTasks(data);
+        // default to first incomplete task if available
+        const firstOpen = data.find((t: Task) => !t.completed);
+        if (firstOpen) setSelectedTaskId(firstOpen.id);
+      })
+      .catch(() => {
+        // timer can still work without tasks
+      });
+  }, []);
 
   // When mode/durations change AND timer isn't running, reset secondsLeft to match
   useEffect(() => {
@@ -80,48 +76,37 @@ export default function TimerPage() {
 
   // When timer hits 0, auto switch modes
   useEffect(() => {
-  if (!isRunning) return;
-  if (secondsLeft > 0) return;
+    if (!isRunning) return;
+    if (secondsLeft > 0) return;
 
-  async function finalize() {
-    setIsRunning(false);
+    async function finalize() {
+      setIsRunning(false);
 
-    // Save only focus sessions
-    if (mode === "focus") {
-      setSaveError(null);
-      try {
-        await createSession({
+      // Save only focus sessions
+      if (mode === "focus") {
+        setSaveError(null);
+        const session = {
           id: crypto.randomUUID(),
           taskId: selectedTaskId,
-          mode: "focus",
+          mode: "focus" as const,
           durationSeconds: focusMinutes * 60,
           endedAt: new Date().toISOString(),
-        });
-      } catch (e: any) {
-        setSaveError(e?.message || "Failed to save session");
+        };
+        try {
+          await createSession(session);
+        } catch (e: any) {
+          setSaveError(e?.message || "Failed to save session");
+        } finally {
+          // Always add to local sessions store
+          addSession(session);
+        }
       }
+
+      setMode((prev) => (prev === "focus" ? "break" : "focus"));
     }
 
-    setMode((prev) => (prev === "focus" ? "break" : "focus"));
-  }
-
-  finalize();
-}, [secondsLeft, isRunning, mode, focusMinutes, selectedTaskId]);
-
-
-  // If a focus session just finished, store it
-  if (mode === "focus") {
-    addSession({
-      id: crypto.randomUUID(),
-      mode: "focus",
-      durationSeconds: focusMinutes * 60,
-      endedAt: new Date().toISOString(),
-    });
-  }
-
-  setIsRunning(false);
-  setMode((prev) => (prev === "focus" ? "break" : "focus"));
-}, [secondsLeft, isRunning, mode, focusMinutes]);
+    finalize();
+  }, [secondsLeft, isRunning, mode, focusMinutes, selectedTaskId]);
 
   function toggleStartPause() {
     setIsRunning((r) => !r);
