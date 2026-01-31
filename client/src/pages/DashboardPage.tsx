@@ -69,6 +69,15 @@ const streakDays = useMemo(() => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [sessions, setSessions] = useState<FocusSession[]>([]);
+
+  useEffect(() => {
+  getSessions()
+    .then((data) => setSessions(data))
+    .catch(() => {});
+}, []);
+
+
   useEffect(() => {
     getTasks()
       .then((data) => setTasks(data))
