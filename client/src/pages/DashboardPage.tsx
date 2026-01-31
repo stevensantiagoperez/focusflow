@@ -85,6 +85,14 @@ const streakDays = useMemo(() => {
       .finally(() => setLoading(false));
   }, []);
 
+  function pad2(n: number) {
+  return String(n).padStart(2, "0");
+}
+function dayKey(d: Date) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+
   const totalTasks = tasks.length;
   const completedCount = useMemo(
     () => tasks.filter((t) => t.completed).length,
