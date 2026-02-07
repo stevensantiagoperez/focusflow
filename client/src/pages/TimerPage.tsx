@@ -93,12 +93,10 @@ export default function TimerPage() {
         };
         try {
           await createSession(session);
-        } catch (e: any) {
-          setSaveError(e?.message || "Failed to save session");
-        } finally {
-          // Always add to local sessions store
-          addSession(session);
-        }
+          } catch (e) {
+              const msg = e instanceof Error ? e.message : "Failed to save session";
+              setSaveError(msg);
+            }
       }
 
       setMode((prev) => (prev === "focus" ? "break" : "focus"));
