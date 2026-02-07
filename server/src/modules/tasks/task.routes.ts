@@ -1,64 +1,67 @@
 import { Router } from "express";
+import { prisma } from "../../db";
 
 const router = Router();
 
-// Simple in-memory task list for now
-type Task = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
-
-let tasks: Task[] = [
-  { id: 1, title: "Test task from server", completed: false },
-];
-
-
-// GET /api/tasks - list all tasks
-router.get("/", (req, res) => {
+// GET /api/tasks
+router.get("/", async (req, res) => {
+  const tasks = await prisma.task.findMany({
+    orderBy: { createdAt: "asc" },
+  });
   res.json(tasks);
 });
 
-// POST /api/tasks - create a new task
-router.post("/", (req, res) => {
+// POST /api/tasks
+router.post("/", async (req, res) => {
   const { title } = req.body;
 
   if (!title || typeof title !== "string") {
     return res.status(400).json({ message: "Title is required" });
   }
 
-  const newTask: Task = { id: Date.now(), 
-    title, completed: false };
-  tasks.push(newTask);
-  res.status(201).json(newTask);
+  const task = await prisma.task.create({
+    data: { title, completed: false },
+  });
+
+  res.status(201).json(task);
 });
 
-// DELETE /api/tasks/:id - delete task by id
-router.delete("/:id", (req, res) => {
+// DELETE /api/tasks/:id
+router.delete("/:id", async (req, res) => {
   const id = Number(req.params.id);
+  if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid id" });
 
-  const beforeLength = tasks.length;
-  tasks = tasks.filter((t) => t.id !== id);
-
-  if (tasks.length === beforeLength) {
-    return res.status(404).json({ message: "Task not found" });
+  try {
+    await prisma.task.delete({ where: { id } });
+    res.status(204).send();
+  } catch {
+    res.status(404).json({ message: "Task not found" });
   }
-
-  res.status(204).send(); // no content
 });
 
-router.patch("/:id", (req, res) => {
+// PATCH /api/tasks/:id
+router.patch("/:id", async (req, res) => {
   const id = Number(req.params.id);
-  const { completed, title } = req.body;
+  if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid id" });
 
-  const task = tasks.find((t) => t.id === id);
-  if (!task) return res.status(404).json({ message: "Task not found" });
+  const { completed, title } = req.body as {
+    completed?: unknown;
+    title?: unknown;
+  };
 
-  if (typeof completed === "boolean") task.completed = completed;
-  if (typeof title === "string") task.title = title;
+  const data: { completed?: boolean; title?: string } = {};
+  if (typeof completed === "boolean") data.completed = completed;
+  if (typeof title === "string") data.title = title;
 
-  res.json(task);
+  try {
+    const updated = await prisma.task.update({
+      where: { id },
+      data,
+    });
+    res.json(updated);
+  } catch {
+    res.status(404).json({ message: "Task not found" });
+  }
 });
-
 
 export default router;
