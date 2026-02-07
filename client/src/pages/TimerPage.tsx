@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { addSession } from "../utils/sessions";
 import { createSession, getTasks } from "../services/apiClient";
 
 type Task = { id: number; title: string; completed: boolean };
