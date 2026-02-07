@@ -124,36 +124,40 @@ export default function TimerPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3">
-        {saveError && (
-  <p className="text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
-    Error: {saveError}
-  </p>
-)}
 
-<div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
-  <h2 className="text-lg font-semibold mb-3">Working on</h2>
+    {saveError && (
+      <p className="text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
+        Error: {saveError}
+      </p>
+    )}
 
-  <select
-    value={selectedTaskId ?? ""}
-    onChange={(e) => setSelectedTaskId(e.target.value ? Number(e.target.value) : null)}
-    disabled={isRunning}
-    className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-  >
-    <option value="">No task selected</option>
-    {tasks.map((t) => (
-      <option key={t.id} value={t.id}>
-        {t.completed ? "✅ " : ""}{t.title}
-      </option>
-    ))}
-  </select>
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+      <h2 className="text-lg font-semibold mb-3">Working on</h2>
 
-  <p className="mt-2 text-xs text-slate-500">
-    Tip: pick a task before starting. (Disabled while running.)
-  </p>
-</div>
+      <select
+        value={selectedTaskId ?? ""}
+        onChange={(e) =>
+          setSelectedTaskId(e.target.value ? Number(e.target.value) : null)
+        }
+        disabled={isRunning}
+        className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+      >
+        <option value="">No task selected</option>
+        {tasks.map((t) => (
+          <option key={t.id} value={t.id}>
+            {t.completed ? "✅ " : ""}
+            {t.title}
+          </option>
+        ))}
+      </select>
 
-        <h1 className="text-3xl font-semibold tracking-tight">Timer</h1>
+      <p className="mt-2 text-xs text-slate-500">
+        Tip: pick a task before starting. (Disabled while running.)
+      </p>
+    </div>
+
+    <div className="flex items-center justify-between gap-3">
+      <h1 className="text-3xl font-semibold tracking-tight">Timer</h1>
         <div className="flex gap-2">
           <button
             onClick={() => switchMode("focus")}
