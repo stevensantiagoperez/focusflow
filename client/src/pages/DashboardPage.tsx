@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { getSessions, clearSessions, FocusSession } from "../services/apiClient";
-import { clearSessions, loadSessions } from "../utils/sessions";
-
-
+import {
+  getTasks,
+  getSessions,
+  clearSessions,
+  FocusSession,
+} from "../services/apiClient";
 
 type Task = {
   id: number;
@@ -19,80 +21,24 @@ function dayKey(d: Date) {
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 }
 
-
 export default function DashboardPage() {
-
-    const [sessionRefresh, setSessionRefresh] = useState(0);
-
-const focusSessions = useMemo(() => {
-  const all = loadSessions();
-  return all.filter((s) => s.mode === "focus");
-}, [sessionRefresh]);
-
-const todayKey = dayKey(new Date());
-
-const minutesToday = useMemo(() => {
-  return Math.round(
-    focusSessions
-      .filter((s) => dayKey(new Date(s.endedAt)) === todayKey)
-      .reduce((sum, s) => sum + s.durationSeconds, 0) / 60
-  );
-}, [focusSessions, todayKey]);
-
-const sessionsToday = useMemo(() => {
-  return focusSessions.filter((s) => dayKey(new Date(s.endedAt)) === todayKey).length;
-}, [focusSessions, todayKey]);
-
-const streakDays = useMemo(() => {
-  // streak = consecutive days (including today) with at least 1 focus session
-  const byDay = new Map<string, number>();
-  for (const s of focusSessions) {
-    const k = dayKey(new Date(s.endedAt));
-    byDay.set(k, (byDay.get(k) ?? 0) + 1);
-  }
-
-  let streak = 0;
-  const d = new Date();
-  while (true) {
-    const k = dayKey(d);
-    if ((byDay.get(k) ?? 0) > 0) {
-      streak++;
-      d.setDate(d.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-  return streak;
-}, [focusSessions]);
-
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [sessions, setSessions] = useState<FocusSession[]>([]);
-
+  // Load tasks + sessions
   useEffect(() => {
-  getSessions()
-    .then((data) => setSessions(data))
-    .catch(() => {});
-}, []);
-
-
-  useEffect(() => {
-    getTasks()
-      .then((data) => setTasks(data))
-      .catch((err) => setError(err.message || "Failed to load tasks"))
+    Promise.all([getTasks(), getSessions()])
+      .then(([tasksData, sessionsData]) => {
+        setTasks(tasksData);
+        setSessions(sessionsData);
+      })
+      .catch((err) => setError(err.message || "Failed to load dashboard data"))
       .finally(() => setLoading(false));
   }, []);
 
-  function pad2(n: number) {
-  return String(n).padStart(2, "0");
-}
-function dayKey(d: Date) {
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-}
-
-
+  // ---- Task stats ----
   const totalTasks = tasks.length;
   const completedCount = useMemo(
     () => tasks.filter((t) => t.completed).length,
@@ -101,10 +47,43 @@ function dayKey(d: Date) {
   const incompleteCount = totalTasks - completedCount;
 
   const recentTasks = useMemo(() => {
-    // If you later add createdAt, we’ll sort properly.
-    // For now, show the last 5 tasks in the array.
     return tasks.slice(-5).reverse();
   }, [tasks]);
+
+  // ---- Focus stats (STEP 3) ----
+  const focusSessions = useMemo(
+    () => sessions.filter((s) => s.mode === "focus"),
+    [sessions]
+  );
+
+  const today = dayKey(new Date());
+
+  const minutesToday = useMemo(() => {
+    return Math.round(
+      focusSessions
+        .filter((s) => dayKey(new Date(s.endedAt)) === today)
+        .reduce((sum, s) => sum + s.durationSeconds, 0) / 60
+    );
+  }, [focusSessions, today]);
+
+  const sessionsToday = useMemo(() => {
+    return focusSessions.filter((s) => dayKey(new Date(s.endedAt)) === today)
+      .length;
+  }, [focusSessions, today]);
+
+  const streakDays = useMemo(() => {
+    const daysWith = new Set(
+      focusSessions.map((s) => dayKey(new Date(s.endedAt)))
+    );
+
+    let streak = 0;
+    const d = new Date();
+    while (daysWith.has(dayKey(d))) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    }
+    return streak;
+  }, [focusSessions]);
 
   if (loading) {
     return (
@@ -120,7 +99,7 @@ function dayKey(d: Date) {
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Dashboard</h1>
           <p className="text-slate-400 mt-1">
-            Quick snapshot of your tasks (focus stats coming next).
+            Tasks + focus stats (saved sessions).
           </p>
         </div>
 
@@ -146,24 +125,65 @@ function dayKey(d: Date) {
         </p>
       )}
 
-      {/* Stat cards */}
+      {/* Focus Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-    <p className="text-xs uppercase tracking-wide text-slate-400">Focus minutes (today)</p>
-    <p className="mt-1 text-2xl font-semibold text-slate-50">{minutesToday}</p>
-  </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Focus minutes (today)
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {minutesToday}
+          </p>
+        </div>
 
-  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-    <p className="text-xs uppercase tracking-wide text-slate-400">Focus sessions (today)</p>
-    <p className="mt-1 text-2xl font-semibold text-slate-50">{sessionsToday}</p>
-  </div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Focus sessions (today)
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {sessionsToday}
+          </p>
+        </div>
 
-  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-    <p className="text-xs uppercase tracking-wide text-slate-400">Streak (days)</p>
-    <p className="mt-1 text-2xl font-semibold text-slate-50">{streakDays}</p>
-  </div>
-</div>
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Streak (days)
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {streakDays}
+          </p>
+        </div>
+      </div>
 
+      {/* Task Stat cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Total tasks
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {totalTasks}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Completed
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {completedCount}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Remaining
+          </p>
+          <p className="mt-1 text-2xl font-semibold text-slate-50">
+            {incompleteCount}
+          </p>
+        </div>
+      </div>
 
       {/* Recent tasks */}
       <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
@@ -207,43 +227,15 @@ function dayKey(d: Date) {
         )}
       </div>
 
-      {/* Coming next */}
-      <div className="rounded-2xl border border-dashed border-slate-800/60 bg-slate-900/30 p-5">
-        <h2 className="text-lg font-semibold">Focus stats (next)</h2>
-        <p className="text-sm text-slate-400 mt-1">
-          Next upgrade: store focus sessions from the Timer page and show focus
-          minutes per day + streaks here.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-    <p className="text-xs uppercase tracking-wide text-slate-400">Focus minutes (today)</p>
-    <p className="mt-1 text-2xl font-semibold text-slate-50">{minutesToday}</p>
-  </div>
-
-  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-    <p className="text-xs uppercase tracking-wide text-slate-400">Focus sessions (today)</p>
-    <p className="mt-1 text-2xl font-semibold text-slate-50">{sessionsToday}</p>
-  </div>
-
-  <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
-    <p className="text-xs uppercase tracking-wide text-slate-400">Streak (days)</p>
-    <p className="mt-1 text-2xl font-semibold text-slate-50">{streakDays}</p>
-  </div>
-</div>
-
-<button
-  onClick={() => {
-    clearSessions();
-    setSessionRefresh((n) => n + 1);
-  }}
-  className="text-xs text-slate-400 hover:text-slate-100 underline"
->
-  Clear focus sessions (debug)
-</button>
-
-
+      <button
+        onClick={async () => {
+          await clearSessions();
+          setSessions([]);
+        }}
+        className="text-xs text-slate-400 hover:text-slate-100 underline"
+      >
+        Clear focus sessions (debug)
+      </button>
     </div>
   );
 }
