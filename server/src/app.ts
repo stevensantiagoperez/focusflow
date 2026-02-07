@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import taskRoutes from "./modules/tasks/task.routes";
-import sessionRoutes from "./modules/sessions/session.routes";
+import sessionRoutes from "./modules/tasks/sessions/sessions.routes";
 
 
 const app = express();
