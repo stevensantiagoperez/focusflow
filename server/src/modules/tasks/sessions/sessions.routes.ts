@@ -1,25 +1,23 @@
 import { Router } from "express";
+import { prisma } from "../sessions/";
 
 const router = Router();
 
-export type FocusSession = {
-  id: string;
-  taskId: number | null;
-  mode: "focus" | "break";
-  durationSeconds: number;
-  endedAt: string; // ISO
-};
-
-// In-memory for now (next step later: DB)
-let sessions: FocusSession[] = [];
-
 // GET /api/sessions
-router.get("/", (req, res) => {
-  res.json(sessions);
+router.get("/", async (req, res) => {
+  const sessions = await prisma.session.findMany({
+    orderBy: { endedAt: "desc" },
+  });
+  res.json(
+    sessions.map((s) => ({
+      ...s,
+      endedAt: s.endedAt.toISOString(),
+    }))
+  );
 });
 
 // POST /api/sessions
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { id, taskId, mode, durationSeconds, endedAt } = req.body ?? {};
 
   if (!id || typeof id !== "string") {
@@ -38,21 +36,31 @@ router.post("/", (req, res) => {
     return res.status(400).json({ message: "taskId must be a number or null" });
   }
 
-  const newSession: FocusSession = {
-    id,
-    taskId: taskId ?? null,
-    mode,
-    durationSeconds,
-    endedAt,
-  };
+  // Validate endedAt parses
+  const ended = new Date(endedAt);
+  if (Number.isNaN(ended.getTime())) {
+    return res.status(400).json({ message: "endedAt must be a valid ISO date string" });
+  }
 
-  sessions.push(newSession);
-  res.status(201).json(newSession);
+  const created = await prisma.session.create({
+    data: {
+      id,
+      taskId: taskId ?? null,
+      mode,
+      durationSeconds,
+      endedAt: ended,
+    },
+  });
+
+  res.status(201).json({
+    ...created,
+    endedAt: created.endedAt.toISOString(),
+  });
 });
 
-// Optional: DELETE all sessions (debug)
-router.delete("/", (req, res) => {
-  sessions = [];
+// DELETE /api/sessions (debug)
+router.delete("/", async (_req, res) => {
+  await prisma.session.deleteMany();
   res.status(204).send();
 });
 
