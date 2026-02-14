@@ -83,6 +83,36 @@ export default function DashboardPage() {
     return streak;
   }, [focusSessions]);
 
+  const focusMinutesByTask = useMemo(() => {
+  const map = new Map<number, number>(); // taskId -> minutes
+
+  for (const s of sessions) {
+    if (s.mode !== "focus") continue;
+    if (s.taskId == null) continue;
+
+    const mins = s.durationSeconds / 60;
+    map.set(s.taskId, (map.get(s.taskId) ?? 0) + mins);
+  }
+
+  return map;
+}, [sessions]);
+
+const topTasks = useMemo(() => {
+  const items = tasks
+    .map((t) => ({
+      id: t.id,
+      title: t.title,
+      completed: t.completed,
+      minutes: Math.round((focusMinutesByTask.get(t.id) ?? 0) * 10) / 10, // 1 decimal
+    }))
+    .filter((x) => x.minutes > 0)
+    .sort((a, b) => b.minutes - a.minutes)
+    .slice(0, 5);
+
+  return items;
+}, [tasks, focusMinutesByTask]);
+
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
