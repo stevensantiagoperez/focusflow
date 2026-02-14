@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  getTasks,
-  getSessions,
-  clearSessions,
-  FocusSession,
-} from "../services/apiClient";
+import { getTasks, getSessions, clearSessions } from "../services/apiClient";
+import type { FocusSession } from "../services/apiClient";
+
+
 
 type Task = {
   id: number;
