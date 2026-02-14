@@ -183,6 +183,55 @@ const topTasks = useMemo(() => {
         </div>
       </div>
 
+      <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+  <div className="flex items-center justify-between mb-3">
+    <h2 className="text-lg font-semibold">Top tasks by focus minutes</h2>
+    <Link to="/tasks" className="text-sm text-violet-300 hover:underline">
+      View tasks
+    </Link>
+  </div>
+
+  {topTasks.length === 0 ? (
+    <p className="text-sm text-slate-400">
+      No focus time logged yet. Start the timer with a selected task.
+    </p>
+  ) : (
+    <ul className="space-y-2">
+      {topTasks.map((t) => (
+        <li
+          key={t.id}
+          className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
+        >
+          <div className="min-w-0">
+            <p
+              className={`text-sm truncate ${
+                t.completed ? "line-through text-slate-500" : "text-slate-100"
+              }`}
+              title={t.title}
+            >
+              {t.title}
+            </p>
+            <p className="text-xs text-slate-500">Task #{t.id}</p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-slate-200 tabular-nums">
+              {t.minutes} min
+            </span>
+            <Link
+              to="/tasks"
+              className="text-xs text-violet-300 hover:text-violet-200 hover:underline"
+            >
+              Open
+            </Link>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+
       {/* Task Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
