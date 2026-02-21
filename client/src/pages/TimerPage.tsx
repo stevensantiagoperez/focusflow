@@ -97,6 +97,12 @@ export default function TimerPage() {
         };
         try {
           await createSession(session);
+          // Show prompt to complete task
+          if (selectedTaskId !== null) {
+            const t = tasks.find((x) => x.id === selectedTaskId);
+            setCompletedTaskTitle(t?.title ?? "this task");
+            setShowCompletePrompt(true);
+          }
           } catch (e) {
               const msg = e instanceof Error ? e.message : "Failed to save session";
               setSaveError(msg);
