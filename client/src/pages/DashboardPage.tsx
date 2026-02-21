@@ -185,11 +185,22 @@ const topTasks = useMemo(() => {
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
   <div className="flex items-center justify-between mb-3">
-    <h2 className="text-lg font-semibold">Top tasks by focus minutes</h2>
+  <h2 className="text-lg font-semibold">Top tasks by focus minutes</h2>
+
+  <div className="flex items-center gap-3">
+    <button
+      onClick={() => getSessions().then(setSessions).catch(() => {})}
+      className="text-sm text-slate-400 hover:text-slate-100 underline"
+      type="button"
+    >
+      Refresh
+    </button>
+
     <Link to="/tasks" className="text-sm text-violet-300 hover:underline">
       View tasks
     </Link>
   </div>
+</div>
 
   {topTasks.length === 0 ? (
     <p className="text-sm text-slate-400">
