@@ -27,6 +27,10 @@ export default function TimerPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(() => focusMinutes * 60);
 
+  const [showCompletePrompt, setShowCompletePrompt] = useState(false);
+  const [completedTaskTitle, setCompletedTaskTitle] = useState<string | null>(null);
+  const [completeError, setCompleteError] = useState<string | null>(null);
+
   const intervalRef = useRef<number | null>(null);
 
   const totalSecondsForMode = useMemo(() => {
