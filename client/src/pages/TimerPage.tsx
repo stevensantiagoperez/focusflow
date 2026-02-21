@@ -157,6 +157,37 @@ export default function TimerPage() {
       </p>
     )}
 
+    {showCompletePrompt && (
+  <div className="rounded-xl border border-emerald-700/60 bg-emerald-950/30 px-4 py-3">
+    <p className="text-sm text-emerald-200">
+      Focus session complete. Mark{" "}
+      <span className="font-semibold">{completedTaskTitle}</span> as completed?
+    </p>
+
+    {completeError && (
+      <p className="mt-2 text-sm text-red-300">Error: {completeError}</p>
+    )}
+
+    <div className="mt-3 flex items-center gap-2">
+      <button
+        onClick={markSelectedTaskComplete}
+        className="rounded-md bg-emerald-600 px-3 py-2 text-sm font-medium hover:bg-emerald-500 transition-colors"
+        type="button"
+      >
+        Complete
+      </button>
+
+      <button
+        onClick={() => setShowCompletePrompt(false)}
+        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors"
+        type="button"
+      >
+        Not now
+      </button>
+    </div>
+  </div>
+)}
+
     <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
       <h2 className="text-lg font-semibold mb-3">Working on</h2>
 
