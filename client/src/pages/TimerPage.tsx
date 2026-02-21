@@ -129,6 +129,25 @@ export default function TimerPage() {
     setMode(next);
   }
 
+  async function markSelectedTaskComplete() {
+  if (!selectedTaskId) return;
+
+  setCompleteError(null);
+  try {
+    await updateTask(selectedTaskId, { completed: true });
+
+    // Update local tasks list so UI updates immediately
+    setTasks((prev) =>
+      prev.map((t) => (t.id === selectedTaskId ? { ...t, completed: true } : t))
+    );
+
+    setShowCompletePrompt(false);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : "Failed to complete task";
+    setCompleteError(msg);
+  }
+}
+
   return (
     <div className="space-y-6">
 
