@@ -7,6 +7,7 @@ import AppLayout from "./layouts/AppLayout";
 import TasksPage from "./pages/TasksPage";
 import TimerPage from "./pages/TimerPage";
 import DashboardPage from "./pages/DashBoardPage";
+import TaskDetailPage from "./pages/TaskDetailPage";
 
 
 const router = createBrowserRouter([
