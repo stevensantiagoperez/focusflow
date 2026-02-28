@@ -18,6 +18,7 @@ const router = createBrowserRouter([
       { index: true, element: <TasksPage /> },
       { path: "timer", element: <TimerPage /> },
       { path: "dashboard", element: <DashboardPage /> },
+      { path: "tasks/:id", element: <TaskDetailPage /> },
     ],
   },
 ]);
