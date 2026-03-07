@@ -8,13 +8,14 @@ datasource db {
 }
 
 model Task {
-  id        Int       @id @default(autoincrement())
-  title     String
-  completed Boolean   @default(false)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id          Int       @id @default(autoincrement())
+  title       String
+  completed   Boolean   @default(false)
+  goalMinutes Int       @default(60)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  sessions  Session[]
+  sessions    Session[]
 }
 
 model Session {
