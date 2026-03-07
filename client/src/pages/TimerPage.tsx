@@ -32,6 +32,8 @@ export default function TimerPage() {
   const [completedTaskTitle, setCompletedTaskTitle] = useState<string | null>(null);
   const [completeError, setCompleteError] = useState<string | null>(null);
 
+  const [searchParams] = useSearchParams();
+
   const intervalRef = useRef<number | null>(null);
 
   const totalSecondsForMode = useMemo(() => {
