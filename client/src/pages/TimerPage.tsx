@@ -140,7 +140,7 @@ export default function TimerPage() {
   }
 
   async function markSelectedTaskComplete() {
-  if (!selectedTaskId) return;
+  if (selectedTaskId === null) return;
 
   setCompleteError(null);
   try {
