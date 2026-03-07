@@ -47,17 +47,24 @@ export default function TimerPage() {
   }, [secondsLeft, totalSecondsForMode]);
 
   useEffect(() => {
-    getTasks()
-      .then((data) => {
-        setTasks(data);
-        // default to first incomplete task if available
+  getTasks()
+    .then((data) => {
+      setTasks(data);
+
+      const param = searchParams.get("taskId");
+      const fromUrl = param ? Number(param) : null;
+
+      if (fromUrl !== null && data.some((t: Task) => t.id === fromUrl)) {
+        setSelectedTaskId(fromUrl);
+      } else {
         const firstOpen = data.find((t: Task) => !t.completed);
         if (firstOpen) setSelectedTaskId(firstOpen.id);
-      })
-      .catch(() => {
-        // timer can still work without tasks
-      });
-  }, []);
+      }
+    })
+    .catch(() => {
+      // timer can still work without tasks
+    });
+}, [searchParams]);
 
   // When mode/durations change AND timer isn't running, reset secondsLeft to match
   useEffect(() => {
