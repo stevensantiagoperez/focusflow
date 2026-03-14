@@ -27,6 +27,7 @@ export default function TaskDetailPage() {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [goalInput, setGoalInput] = useState("");
 
   // Load tasks + sessions
   useEffect(() => {
