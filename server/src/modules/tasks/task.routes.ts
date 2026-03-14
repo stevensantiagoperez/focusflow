@@ -44,10 +44,11 @@ router.patch("/:id", async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid id" });
 
-  const { completed, title } = req.body as {
-    completed?: unknown;
-    title?: unknown;
-  };
+  const { completed, title, goalMinutes } = req.body as {
+  completed?: unknown;
+  title?: unknown;
+  goalMinutes?: unknown;
+};
 
   const data: { completed?: boolean; title?: string } = {};
   if (typeof completed === "boolean") data.completed = completed;
