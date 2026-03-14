@@ -53,6 +53,9 @@ router.patch("/:id", async (req, res) => {
   const data: { completed?: boolean; title?: string; goalMinutes?: number } = {};
   if (typeof completed === "boolean") data.completed = completed;
   if (typeof title === "string") data.title = title;
+  if (typeof goalMinutes === "number" && goalMinutes > 0) {
+  data.goalMinutes = goalMinutes;
+}
 
   try {
     const updated = await prisma.task.update({
