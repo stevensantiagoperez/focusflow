@@ -5,6 +5,7 @@ type Task = {
   id: number;
   title: string;
   completed: boolean;
+  goalMinutes: number;
 };
 
 export default function TasksPage() {
