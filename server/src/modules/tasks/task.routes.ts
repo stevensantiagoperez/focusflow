@@ -50,7 +50,7 @@ router.patch("/:id", async (req, res) => {
   goalMinutes?: unknown;
 };
 
-  const data: { completed?: boolean; title?: string } = {};
+  const data: { completed?: boolean; title?: string; goalMinutes?: number } = {};
   if (typeof completed === "boolean") data.completed = completed;
   if (typeof title === "string") data.title = title;
 
