@@ -11,6 +11,7 @@ type Task = {
   id: number;
   title: string;
   completed: boolean;
+  goalMinutes: number;
 };
 
 function fmtDate(iso: string) {
