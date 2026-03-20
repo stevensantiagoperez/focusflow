@@ -78,6 +78,25 @@ useEffect(() => {
     }
   }
 
+  async function saveGoalMinutes() {
+  if (!task) return;
+
+  const parsed = Number(goalInput);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    setError("Goal minutes must be a positive number");
+    return;
+  }
+
+  try {
+    const updated = await updateTask(task.id, { goalMinutes: parsed });
+    setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
+    setError(null);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : "Failed to save goal";
+    setError(msg);
+  }
+}
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
