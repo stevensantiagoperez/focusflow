@@ -50,6 +50,12 @@ export default function TaskDetailPage() {
   }, [taskId]);
 const task = useMemo(() => tasks.find((t) => t.id === taskId), [tasks, taskId]);
 
+useEffect(() => {
+  if (task) {
+    setGoalInput(String(task.goalMinutes));
+  }
+}, [task]);
+
   const taskSessions = useMemo(() => {
     return sessions
       .filter((s) => s.mode === "focus" && s.taskId === taskId)
