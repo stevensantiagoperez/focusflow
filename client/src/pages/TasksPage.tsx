@@ -20,6 +20,7 @@ export default function TasksPage() {
   const [newTitle, setNewTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sessions, setSessions] = useState<FocusSession[]>([]);
 
   // Load tasks on mount
   useEffect(() => {
