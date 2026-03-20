@@ -180,6 +180,18 @@ useEffect(() => {
   </div>
 </div>
 
+<div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+  <p className="text-xs uppercase tracking-wide text-slate-400">
+    Goal progress
+  </p>
+  <p className="mt-1 text-2xl font-semibold text-slate-50">
+    {task.goalMinutes > 0
+      ? Math.min(100, Math.round((totalFocusMinutes / task.goalMinutes) * 100))
+      : 0}
+    %
+  </p>
+</div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
           <p className="text-xs uppercase tracking-wide text-slate-400">
