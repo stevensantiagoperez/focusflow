@@ -86,6 +86,20 @@ export default function TasksPage() {
   const totalTasks = tasks.length;
   const completedCount = tasks.filter((t) => t.completed).length;
 
+  const focusMinutesByTask = useMemo(() => {
+  const map = new Map<number, number>();
+
+  for (const s of sessions) {
+    if (s.mode !== "focus") continue;
+    if (s.taskId == null) continue;
+
+    const mins = s.durationSeconds / 60;
+    map.set(s.taskId, (map.get(s.taskId) ?? 0) + mins);
+  }
+
+  return map;
+}, [sessions]);
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
