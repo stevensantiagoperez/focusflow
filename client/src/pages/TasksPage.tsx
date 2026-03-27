@@ -176,8 +176,14 @@ export default function TasksPage() {
     </Link>
 
     <span className="text-xs text-slate-500">
-      {Math.round((focusMinutesByTask.get(task.id) ?? 0) * 10) / 10} / {task.goalMinutes} min
-    </span>
+  {task.goalMinutes > 0
+    ? Math.min(
+        100,
+        Math.round(((focusMinutesByTask.get(task.id) ?? 0) / task.goalMinutes) * 100)
+      )
+    : 0}
+  %
+</span>
   </div>
 </div>
 
