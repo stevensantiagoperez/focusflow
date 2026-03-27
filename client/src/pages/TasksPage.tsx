@@ -157,18 +157,29 @@ export default function TasksPage() {
                 key={task.id}
                 className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
               >
-                {/* LEFT SIDE = checkbox + title */}
                 <div className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={!!task.completed}
-                    onChange={() => handleToggle(task)}
-                    className="h-4 w-4 appearance-auto accent-violet-500"
-                  />
-                  <span className={`text-sm ${task.completed ? "line-through text-slate-500" : ""}`}>
-                    {task.title}
-                  </span>
-                </div>
+  <input
+    type="checkbox"
+    checked={!!task.completed}
+    onChange={() => handleToggle(task)}
+    className="h-4 w-4 appearance-auto accent-violet-500"
+  />
+
+  <div className="flex flex-col min-w-0">
+    <Link
+      to={`/tasks/${task.id}`}
+      className={`text-sm hover:underline ${
+        task.completed ? "line-through text-slate-500" : ""
+      }`}
+    >
+      {task.title}
+    </Link>
+
+    <span className="text-xs text-slate-500">
+      {Math.round((focusMinutesByTask.get(task.id) ?? 0) * 10) / 10} / {task.goalMinutes} min
+    </span>
+  </div>
+</div>
 
                 {/* RIGHT SIDE = delete */}
                 <button
