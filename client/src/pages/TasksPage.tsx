@@ -24,17 +24,17 @@ export default function TasksPage() {
 
   // Load tasks on mount
   useEffect(() => {
-    (async () => {
-      try {
-        const data = await getTasks();
-        setTasks(data);
-      } catch (err: any) {
-        setError(err?.message || "Failed to fetch tasks");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  Promise.all([getTasks(), getSessions()])
+    .then(([taskData, sessionData]) => {
+      setTasks(taskData);
+      setSessions(sessionData);
+    })
+    .catch((err: unknown) => {
+      const msg = err instanceof Error ? err.message : "Failed to load tasks";
+      setError(msg);
+    })
+    .finally(() => setLoading(false));
+}, []);
 
   async function handleAddTask(e: FormEvent) {
     e.preventDefault();
