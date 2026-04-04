@@ -157,9 +157,15 @@ export default function TasksPage() {
               const isGoalReached = task.goalMinutes > 0 && minutes >= task.goalMinutes;
               return (
               <li
-                key={task.id}
-                className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
-              >
+  key={task.id}
+  className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-3 transition-all
+    ${
+      isGoalReached
+        ? "border-emerald-600/60 bg-emerald-950/20 shadow-[0_0_10px_rgba(16,185,129,0.25)]"
+        : "border-slate-800 bg-slate-900"
+    }
+  `}
+>
                 <div className="flex items-center gap-3 flex-1 min-w-0">
   <input
     type="checkbox"
