@@ -166,14 +166,22 @@ export default function TasksPage() {
   />
 
   <div className="flex flex-col min-w-0 flex-1">
-    <Link
-      to={`/tasks/${task.id}`}
-      className={`text-sm hover:underline ${
-        task.completed ? "line-through text-slate-500" : ""
-      }`}
-    >
-      {task.title}
-    </Link>
+   <div className="flex items-center gap-2 min-w-0">
+  <Link
+    to={`/tasks/${task.id}`}
+    className={`text-sm hover:underline truncate ${
+      task.completed ? "line-through text-slate-500" : ""
+    }`}
+  >
+    {task.title}
+  </Link>
+
+  {(focusMinutesByTask.get(task.id) ?? 0) >= task.goalMinutes && (
+    <span className="shrink-0 rounded-full border border-emerald-700/60 bg-emerald-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-300">
+      Goal reached
+    </span>
+  )}
+</div>
 
     <div className="mt-1 flex items-center justify-between gap-2">
       <span className="text-xs text-slate-500">
