@@ -157,7 +157,7 @@ export default function TasksPage() {
                 key={task.id}
                 className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
   <input
     type="checkbox"
     checked={!!task.completed}
@@ -165,7 +165,7 @@ export default function TasksPage() {
     className="h-4 w-4 appearance-auto accent-violet-500"
   />
 
-  <div className="flex flex-col min-w-0">
+  <div className="flex flex-col min-w-0 flex-1">
     <Link
       to={`/tasks/${task.id}`}
       className={`text-sm hover:underline ${
@@ -175,15 +175,41 @@ export default function TasksPage() {
       {task.title}
     </Link>
 
-    <span className="text-xs text-slate-500">
-  {task.goalMinutes > 0
-    ? Math.min(
-        100,
-        Math.round(((focusMinutesByTask.get(task.id) ?? 0) / task.goalMinutes) * 100)
-      )
-    : 0}
-  %
-</span>
+    <div className="mt-1 flex items-center justify-between gap-2">
+      <span className="text-xs text-slate-500">
+        {Math.round((focusMinutesByTask.get(task.id) ?? 0) * 10) / 10} / {task.goalMinutes} min
+      </span>
+
+      <span className="text-xs text-slate-500">
+        {task.goalMinutes > 0
+          ? Math.min(
+              100,
+              Math.round(
+                (((focusMinutesByTask.get(task.id) ?? 0) / task.goalMinutes) * 100)
+              )
+            )
+          : 0}
+        %
+      </span>
+    </div>
+
+    <div className="mt-1 h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+      <div
+        className={`h-full rounded-full ${
+          task.completed ? "bg-emerald-500" : "bg-violet-500"
+        }`}
+        style={{
+          width: `${
+            task.goalMinutes > 0
+              ? Math.min(
+                  100,
+                  ((focusMinutesByTask.get(task.id) ?? 0) / task.goalMinutes) * 100
+                )
+              : 0
+          }%`,
+        }}
+      />
+    </div>
   </div>
 </div>
 
