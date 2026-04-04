@@ -152,7 +152,8 @@ export default function TasksPage() {
           </p>
         ) : (
           <ul className="space-y-2">
-            {tasks.map((task) => (
+            {tasks.map((task) => {
+              return (
               <li
                 key={task.id}
                 className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-900 px-3 py-2"
@@ -229,7 +230,7 @@ export default function TasksPage() {
                   Delete
                 </button>
               </li>
-            ))}
+)})}
           </ul>
         )}
       </div>
