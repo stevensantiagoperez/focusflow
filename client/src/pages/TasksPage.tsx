@@ -103,6 +103,24 @@ export default function TasksPage() {
   return map;
 }, [sessions]);
 
+useEffect(() => {
+  const nextMap: Record<number, boolean> = {};
+
+  for (const task of tasks) {
+    const minutes = focusMinutesByTask.get(task.id) ?? 0;
+    const isGoalReached = task.goalMinutes > 0 && minutes >= task.goalMinutes;
+    nextMap[task.id] = isGoalReached;
+
+    const wasGoalReached = prevGoalReachedMap[task.id] ?? false;
+
+    if (!wasGoalReached && isGoalReached) {
+      setToastMessage(`🎉 Goal reached for "${task.title}"`);
+    }
+  }
+
+  setPrevGoalReachedMap(nextMap);
+}, [tasks, focusMinutesByTask, prevGoalReachedMap]);
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
