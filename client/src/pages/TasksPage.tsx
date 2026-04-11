@@ -23,6 +23,7 @@ export default function TasksPage() {
   const [error, setError] = useState<string | null>(null);
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [prevGoalReachedMap, setPrevGoalReachedMap] = useState<Record<number, boolean>>({});
 
   // Load tasks on mount
   useEffect(() => {
