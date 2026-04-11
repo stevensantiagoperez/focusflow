@@ -158,6 +158,12 @@ useEffect(() => {
         </p>
       )}
 
+      {toastMessage && (
+  <div className="fixed top-20 right-4 z-50 rounded-lg border border-emerald-700/60 bg-emerald-950/90 px-4 py-3 text-sm text-emerald-200 shadow-[0_0_20px_rgba(16,185,129,0.25)] backdrop-blur">
+    {toastMessage}
+  </div>
+)}
+
       <form onSubmit={handleAddTask} className="mt-2 mb-4 flex flex-col sm:flex-row gap-2">
         <input
           type="text"
