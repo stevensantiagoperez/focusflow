@@ -121,6 +121,16 @@ useEffect(() => {
   setPrevGoalReachedMap(nextMap);
 }, [tasks, focusMinutesByTask, prevGoalReachedMap]);
 
+useEffect(() => {
+  if (!toastMessage) return;
+
+  const timeout = window.setTimeout(() => {
+    setToastMessage(null);
+  }, 3000);
+
+  return () => window.clearTimeout(timeout);
+}, [toastMessage]);
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
