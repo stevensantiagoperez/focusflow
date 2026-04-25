@@ -184,6 +184,12 @@ setToastMessage(
   return (
     <div className="space-y-6">
 
+      {toastMessage && (
+  <div className="fixed top-20 right-4 z-50 rounded-lg border border-violet-700/60 bg-violet-950/90 px-4 py-3 text-sm text-violet-100 shadow-[0_0_20px_rgba(139,92,246,0.25)] backdrop-blur">
+    {toastMessage}
+  </div>
+)}
+
     {saveError && (
       <p className="text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
         Error: {saveError}
