@@ -24,6 +24,8 @@ export default function TasksPage() {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [prevGoalReachedMap, setPrevGoalReachedMap] = useState<Record<number, boolean>>({});
+  const [filter, setFilter] = useState<"all" | "active" | "completed" | "goalReached">("all");
+  const [sortBy, setSortBy] = useState<"newest" | "mostProgress">("newest");
 
   // Load tasks on mount
   useEffect(() => {
