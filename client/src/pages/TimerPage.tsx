@@ -36,6 +36,7 @@ export default function TimerPage() {
   const [showCompletePrompt, setShowCompletePrompt] = useState(false);
   const [completedTaskTitle, setCompletedTaskTitle] = useState<string | null>(null);
   const [completeError, setCompleteError] = useState<string | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const [searchParams] = useSearchParams();
 
