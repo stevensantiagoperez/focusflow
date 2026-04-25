@@ -123,6 +123,13 @@ useEffect(() => {
         };
         try {
           await createSession(session);
+          const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+
+setToastMessage(
+  selectedTask
+    ? `🎉 Focus session saved for "${selectedTask.title}"`
+    : "🎉 Focus session saved"
+);
           // Show prompt to complete task
           if (selectedTaskId !== null) {
             const t = tasks.find((x) => x.id === selectedTaskId);
