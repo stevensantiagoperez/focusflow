@@ -72,6 +72,16 @@ export default function TimerPage() {
     });
 }, [searchParams]);
 
+useEffect(() => {
+  if (!toastMessage) return;
+
+  const timeout = window.setTimeout(() => {
+    setToastMessage(null);
+  }, 3000);
+
+  return () => window.clearTimeout(timeout);
+}, [toastMessage]);
+
   // When mode/durations change AND timer isn't running, reset secondsLeft to match
   useEffect(() => {
     if (!isRunning) {
