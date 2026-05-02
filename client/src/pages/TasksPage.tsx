@@ -133,6 +133,32 @@ useEffect(() => {
   return () => window.clearTimeout(timeout);
 }, [toastMessage]);
 
+const visibleTasks = useMemo(() => {
+  return [...tasks]
+    .filter((task) => {
+      const minutes = focusMinutesByTask.get(task.id) ?? 0;
+      const isGoalReached = task.goalMinutes > 0 && minutes >= task.goalMinutes;
+
+      if (filter === "active") return !task.completed;
+      if (filter === "completed") return task.completed;
+      if (filter === "goalReached") return isGoalReached;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "mostProgress") {
+        const aMinutes = focusMinutesByTask.get(a.id) ?? 0;
+        const bMinutes = focusMinutesByTask.get(b.id) ?? 0;
+
+        const aProgress = a.goalMinutes > 0 ? aMinutes / a.goalMinutes : 0;
+        const bProgress = b.goalMinutes > 0 ? bMinutes / b.goalMinutes : 0;
+
+        return bProgress - aProgress;
+      }
+
+      return b.id - a.id;
+    });
+}, [tasks, filter, sortBy, focusMinutesByTask]);
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
