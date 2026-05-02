@@ -242,7 +242,7 @@ const visibleTasks = useMemo(() => {
           </p>
         ) : (
           <ul className="space-y-2">
-            {tasks.map((task) => {
+            {visibleTasks.map((task) => {
               const minutes = focusMinutesByTask.get(task.id) ?? 0;
               const isGoalReached = task.goalMinutes > 0 && minutes >= task.goalMinutes;
               return (
