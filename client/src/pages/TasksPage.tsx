@@ -236,7 +236,7 @@ const visibleTasks = useMemo(() => {
   </select>
 </div>
       <div className="bg-slate-900/60 border border-slate-800 rounded-xl shadow-lg p-3">
-        {tasks.length === 0 ? (
+        {visibleTasks.length === 0 ? (
           <p className="text-sm text-slate-400 text-center py-4">
             No tasks yet. Add your first one to get started.
           </p>
