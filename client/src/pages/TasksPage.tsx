@@ -208,7 +208,33 @@ const visibleTasks = useMemo(() => {
           Add Task
         </button>
       </form>
+      <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-between">
+  <div className="flex flex-wrap gap-2">
+    {(["all", "active", "completed", "goalReached"] as const).map((value) => (
+      <button
+        key={value}
+        type="button"
+        onClick={() => setFilter(value)}
+        className={`rounded-md px-3 py-1.5 text-sm border transition-colors ${
+          filter === value
+            ? "border-violet-500 bg-violet-600/20 text-slate-100"
+            : "border-slate-700 bg-slate-900 text-slate-400 hover:text-slate-100"
+        }`}
+      >
+        {value === "goalReached" ? "Goal reached" : value[0].toUpperCase() + value.slice(1)}
+      </button>
+    ))}
+  </div>
 
+  <select
+    value={sortBy}
+    onChange={(e) => setSortBy(e.target.value as "newest" | "mostProgress")}
+    className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+  >
+    <option value="newest">Newest first</option>
+    <option value="mostProgress">Most progress</option>
+  </select>
+</div>
       <div className="bg-slate-900/60 border border-slate-800 rounded-xl shadow-lg p-3">
         {tasks.length === 0 ? (
           <p className="text-sm text-slate-400 text-center py-4">
