@@ -72,6 +72,16 @@ const [breakMinutes, setBreakMinutes] = useState(savedSettings.breakMinutes ?? 5
   }, [secondsLeft, totalSecondsForMode]);
 
   useEffect(() => {
+  const settings: TimerSettings = {
+    focusMinutes,
+    breakMinutes,
+    selectedTaskId,
+  };
+
+  localStorage.setItem(TIMER_SETTINGS_KEY, JSON.stringify(settings));
+}, [focusMinutes, breakMinutes, selectedTaskId]);
+
+  useEffect(() => {
   getTasks()
     .then((data) => {
       setTasks(data);
