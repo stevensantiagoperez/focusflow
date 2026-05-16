@@ -31,7 +31,9 @@ function formatMMSS(totalSeconds: number) {
 
 export default function TimerPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(
+  savedSettings.selectedTaskId ?? null
+);
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const [mode, setMode] = useState<Mode>("focus");
