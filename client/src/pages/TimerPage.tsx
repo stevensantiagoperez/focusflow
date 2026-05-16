@@ -89,13 +89,21 @@ const [breakMinutes, setBreakMinutes] = useState(savedSettings.breakMinutes ?? 5
       const param = searchParams.get("taskId");
       const fromUrl = param ? Number(param) : null;
 
-      if (fromUrl !== null && data.some((t: Task) => t.id === fromUrl)) {
-        setSelectedTaskId(fromUrl);
-      } else {
-        const firstOpen = data.find((t: Task) => !t.completed);
-        if (firstOpen) setSelectedTaskId(firstOpen.id);
-      }
-    })
+      setSelectedTaskId((current) => {
+  // URL taskId wins
+  if (fromUrl !== null && data.some((t: Task) => t.id === fromUrl)) {
+    return fromUrl;
+  }
+
+  // keep saved/current task if it still exists
+  if (current !== null && data.some((t: Task) => t.id === current)) {
+    return current;
+  }
+
+  // otherwise default to first open task
+  const firstOpen = data.find((t: Task) => !t.completed);
+  return firstOpen ? firstOpen.id : null;
+});
     .catch(() => {
       // timer can still work without tasks
     });
