@@ -4,6 +4,12 @@ import { useSearchParams } from "react-router-dom";
 
 const TIMER_SETTINGS_KEY = "focusflow:timer-settings";
 
+type TimerSettings = {
+  focusMinutes: number;
+  breakMinutes: number;
+  selectedTaskId: number | null;
+};
+
 type Task = {
   id: number;
   title: string;
