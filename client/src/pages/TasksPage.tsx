@@ -26,6 +26,9 @@ export default function TasksPage() {
   const [prevGoalReachedMap, setPrevGoalReachedMap] = useState<Record<number, boolean>>({});
   const [filter, setFilter] = useState<"all" | "active" | "completed" | "goalReached">("all");
   const [sortBy, setSortBy] = useState<"newest" | "mostProgress">("newest");
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editGoalMinutes, setEditGoalMinutes] = useState("");
 
   // Load tasks on mount
   useEffect(() => {
