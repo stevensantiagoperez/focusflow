@@ -309,20 +309,97 @@ async function saveTaskEdits(task: Task) {
   />
 
   <div className="flex flex-col min-w-0 flex-1">
-   <div className="flex items-center gap-2 min-w-0">
-  <Link
-    to={`/tasks/${task.id}`}
-    className={`text-sm hover:underline truncate ${
-      task.completed ? "line-through text-slate-500" : ""
-    }`}
-  >
-    {task.title}
-  </Link>
+  {editingTaskId === task.id ? (
+    <div className="space-y-2">
+      <input
+        value={editTitle}
+        onChange={(e) => setEditTitle(e.target.value)}
+        className="w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+        placeholder="Task title"
+      />
 
-  {(focusMinutesByTask.get(task.id) ?? 0) >= task.goalMinutes && (
-    <span className="shrink-0 rounded-full border border-emerald-700/60 bg-emerald-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-300">
-      Goal reached
-    </span>
+      <div className="flex gap-2">
+        <input
+          type="number"
+          min={1}
+          value={editGoalMinutes}
+          onChange={(e) => setEditGoalMinutes(e.target.value)}
+          className="w-32 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+          placeholder="Goal"
+        />
+
+        <button
+          type="button"
+          onClick={() => saveTaskEdits(task)}
+          className="rounded-md bg-violet-600 px-3 py-2 text-sm font-medium hover:bg-violet-500 transition-colors"
+        >
+          Save
+        </button>
+
+        <button
+          type="button"
+          onClick={cancelEditing}
+          className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  ) : (
+    <>
+      <div className="flex items-center gap-2 min-w-0">
+        <Link
+          to={`/tasks/${task.id}`}
+          className={`text-sm hover:underline truncate ${
+            task.completed
+              ? "line-through text-slate-500"
+              : isGoalReached
+              ? "text-emerald-200"
+              : ""
+          }`}
+        >
+          {task.title}
+        </Link>
+
+        {isGoalReached && (
+          <span className="shrink-0 rounded-full border border-emerald-700/60 bg-emerald-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-300">
+            Goal reached
+          </span>
+        )}
+      </div>
+
+      <div className="mt-1 flex items-center justify-between gap-2">
+        <span className="text-xs text-slate-500">
+          {Math.round(minutes * 10) / 10} / {task.goalMinutes} min
+        </span>
+
+        <span className="text-xs text-slate-500">
+          {task.goalMinutes > 0
+            ? Math.min(100, Math.round((minutes / task.goalMinutes) * 100))
+            : 0}
+          %
+        </span>
+      </div>
+
+      <div className="mt-1 h-2 w-full rounded-full bg-slate-800 overflow-hidden">
+        <div
+          className={`h-full rounded-full transition-all ${
+            isGoalReached
+              ? "bg-emerald-500"
+              : task.completed
+              ? "bg-emerald-500"
+              : "bg-violet-500"
+          }`}
+          style={{
+            width: `${
+              task.goalMinutes > 0
+                ? Math.min(100, (minutes / task.goalMinutes) * 100)
+                : 0
+            }%`,
+          }}
+        />
+      </div>
+    </>
   )}
 </div>
 
