@@ -442,12 +442,25 @@ async function saveTaskEdits(task: Task) {
 </div>
 
                 {/* RIGHT SIDE = delete */}
-                <button
-                  onClick={() => handleDelete(task.id)}
-                  className="text-xs text-red-300 hover:text-red-200 hover:underline"
-                >
-                  Delete
-                </button>
+               <div className="flex items-center gap-2">
+  {editingTaskId !== task.id && (
+    <button
+      onClick={() => startEditing(task)}
+      className="text-xs text-slate-300 hover:text-slate-100 hover:underline"
+      type="button"
+    >
+      Edit
+    </button>
+  )}
+
+  <button
+    onClick={() => handleDelete(task.id)}
+    className="text-xs text-red-300 hover:text-red-200 hover:underline"
+    type="button"
+  >
+    Delete
+  </button>
+</div>
               </li>
 )})}
           </ul>
