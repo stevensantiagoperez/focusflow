@@ -168,6 +168,12 @@ function startEditing(task: Task) {
   setEditGoalMinutes(String(task.goalMinutes));
 }
 
+function cancelEditing() {
+  setEditingTaskId(null);
+  setEditTitle("");
+  setEditGoalMinutes("");
+}
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
