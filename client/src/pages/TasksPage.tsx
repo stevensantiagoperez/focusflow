@@ -162,6 +162,12 @@ const visibleTasks = useMemo(() => {
     });
 }, [tasks, filter, sortBy, focusMinutesByTask]);
 
+function startEditing(task: Task) {
+  setEditingTaskId(task.id);
+  setEditTitle(task.title);
+  setEditGoalMinutes(String(task.goalMinutes));
+}
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
