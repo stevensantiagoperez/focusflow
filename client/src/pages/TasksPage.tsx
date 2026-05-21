@@ -174,6 +174,35 @@ function cancelEditing() {
   setEditGoalMinutes("");
 }
 
+async function saveTaskEdits(task: Task) {
+  const title = editTitle.trim();
+  const goalMinutes = Number(editGoalMinutes);
+
+  if (!title) {
+    setError("Task title cannot be empty");
+    return;
+  }
+
+  if (!Number.isFinite(goalMinutes) || goalMinutes <= 0) {
+    setError("Goal minutes must be a positive number");
+    return;
+  }
+
+  try {
+    const updated = await updateTask(task.id, {
+      title,
+      goalMinutes,
+    });
+
+    setTasks((prev) => prev.map((t) => (t.id === task.id ? updated : t)));
+    cancelEditing();
+    setError(null);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : "Failed to update task";
+    setError(msg);
+  }
+}
+
   return (
     <div className="space-y-5">
       <h1 className="text-3xl font-semibold tracking-tight">Tasks</h1>
