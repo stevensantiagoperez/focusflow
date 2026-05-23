@@ -403,6 +403,7 @@ async function saveTaskEdits(task: Task) {
     </>
   )}
 </div>
+</div>
 
                 {/* RIGHT SIDE = delete */}
                <div className="flex items-center gap-2">
