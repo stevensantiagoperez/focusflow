@@ -403,43 +403,6 @@ async function saveTaskEdits(task: Task) {
   )}
 </div>
 
-    <div className="mt-1 flex items-center justify-between gap-2">
-      <span className="text-xs text-slate-500">
-        {Math.round((focusMinutesByTask.get(task.id) ?? 0) * 10) / 10} / {task.goalMinutes} min
-      </span>
-
-      <span className="text-xs text-slate-500">
-        {task.goalMinutes > 0
-          ? Math.min(
-              100,
-              Math.round(
-                (((focusMinutesByTask.get(task.id) ?? 0) / task.goalMinutes) * 100)
-              )
-            )
-          : 0}
-        %
-      </span>
-    </div>
-
-    <div className="mt-1 h-2 w-full rounded-full bg-slate-800 overflow-hidden">
-      <div
-        className={`h-full rounded-full ${
-          task.completed ? "bg-emerald-500" : "bg-violet-500"
-        }`}
-        style={{
-          width: `${
-            task.goalMinutes > 0
-              ? Math.min(
-                  100,
-                  ((focusMinutesByTask.get(task.id) ?? 0) / task.goalMinutes) * 100
-                )
-              : 0
-          }%`,
-        }}
-      />
-    </div>
-  </div>
-
                 {/* RIGHT SIDE = delete */}
                <div className="flex items-center gap-2">
   {editingTaskId !== task.id && (
