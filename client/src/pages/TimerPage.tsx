@@ -103,7 +103,7 @@ const [breakMinutes, setBreakMinutes] = useState(savedSettings.breakMinutes ?? 5
   // otherwise default to first open task
   const firstOpen = data.find((t: Task) => !t.completed);
   return firstOpen ? firstOpen.id : null;
-});
+})
     .catch(() => {
       // timer can still work without tasks
     });
