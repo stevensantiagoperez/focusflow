@@ -425,9 +425,10 @@ async function saveTaskEdits(task: Task) {
     Delete
   </button>
 </div>
-              </li>
-            ))}
-          </ul>
+             </li>
+            );
+          })}
+</ul>
         )}
       </div>
     </div>
