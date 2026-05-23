@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
 import {
   getTasks,
   createTask,
