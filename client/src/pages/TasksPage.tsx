@@ -127,7 +127,7 @@ useEffect(() => {
   }
 
   setPrevGoalReachedMap(nextMap);
-}, [tasks, focusMinutesByTask, prevGoalReachedMap]);
+}, [tasks, focusMinutesByTask]);
 
 useEffect(() => {
   if (!toastMessage) return;
