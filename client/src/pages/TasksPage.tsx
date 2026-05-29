@@ -86,19 +86,7 @@ export default function TasksPage() {
       setError(err?.message || "Failed to update task");
     }
   }
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-lg text-slate-200">Loading tasks...</p>
-      </div>
-    );
-  }
-
-  const totalTasks = tasks.length;
-  const completedCount = tasks.filter((t) => t.completed).length;
-
-  const focusMinutesByTask = useMemo(() => {
+const focusMinutesByTask = useMemo(() => {
   const map = new Map<number, number>();
 
   for (const s of sessions) {
@@ -111,6 +99,19 @@ export default function TasksPage() {
 
   return map;
 }, [sessions]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-lg text-slate-200">Loading tasks...</p>
+      </div>
+    );
+  }
+
+  const totalTasks = tasks.length;
+  const completedCount = tasks.filter((t) => t.completed).length;
+
+  
 
 useEffect(() => {
   const nextMap: Record<number, boolean> = {};
