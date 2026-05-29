@@ -100,13 +100,11 @@ const focusMinutesByTask = useMemo(() => {
   return map;
 }, [sessions]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <p className="text-lg text-slate-200">Loading tasks...</p>
-      </div>
-    );
-  }
+
+
+
+
+
 
   const totalTasks = tasks.length;
   const completedCount = tasks.filter((t) => t.completed).length;
@@ -167,6 +165,13 @@ const visibleTasks = useMemo(() => {
     });
 }, [tasks, filter, sortBy, focusMinutesByTask]);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <p className="text-lg text-slate-200">Loading tasks...</p>
+      </div>
+    );
+  }
 function startEditing(task: Task) {
   setEditingTaskId(task.id);
   setEditTitle(task.title);
