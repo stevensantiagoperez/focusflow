@@ -63,15 +63,18 @@ export default function TasksPage() {
   }
 
   async function handleDelete(id: number) {
-    setError(null);
-    try {
-      await deleteTask(id);
-      setTasks((prev) => prev.filter((t) => t.id !== id));
-    } catch (err: any) {
-      console.error("deleteTask error:", err);
-      setError(err?.message || "Failed to delete task");
-    }
+  const confirmed = window.confirm("Are you sure you want to delete this task?");
+  if (!confirmed) return;
+
+  setError(null);
+  try {
+    await deleteTask(id);
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : "Failed to delete task";
+    setError(msg);
   }
+}
 
   async function handleToggle(task: Task) {
     setError(null);
