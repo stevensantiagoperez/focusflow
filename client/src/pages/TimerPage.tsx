@@ -30,21 +30,28 @@ function formatMMSS(totalSeconds: number) {
 }
 
 export default function TimerPage() {
+  const savedSettings = (() => {
+    try {
+      const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
+      return raw ? (JSON.parse(raw) as Partial<TimerSettings>) : {};
+    } catch {
+      return {};
+    }
+  })();
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(
-  savedSettings.selectedTaskId ?? null
-);
+    savedSettings.selectedTaskId ?? null
+  );
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const [mode, setMode] = useState<Mode>("focus");
-  const savedSettings = (() => {
-  try {
-    const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
-    return raw ? (JSON.parse(raw) as Partial<TimerSettings>) : {};
-  } catch {
-    return {};
-  }
-})();
+  const [focusMinutes, setFocusMinutes] = useState(
+    savedSettings.focusMinutes ?? 25
+  );
+  const [breakMinutes, setBreakMinutes] = useState(
+    savedSettings.breakMinutes ?? 5
+  );
 
 const [focusMinutes, setFocusMinutes] = useState(savedSettings.focusMinutes ?? 25);
 const [breakMinutes, setBreakMinutes] = useState(savedSettings.breakMinutes ?? 5);
