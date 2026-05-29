@@ -6,7 +6,7 @@ import "./index.css";
 import AppLayout from "./layouts/AppLayout";
 import TasksPage from "./pages/TasksPage";
 import TimerPage from "./pages/TimerPage";
-import DashboardPage from "./pages/DashBoardPage";
+import DashboardPage from "./pages/DashboardPage";
 import TaskDetailPage from "./pages/TaskDetailPage";
 
 
