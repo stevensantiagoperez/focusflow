@@ -6,6 +6,9 @@ function pad2(n: number) {
   return String(n).padStart(2, "0");
 }
 
+function dayKey(d: Date) {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
 
 export default function AnalyticsPage() {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
