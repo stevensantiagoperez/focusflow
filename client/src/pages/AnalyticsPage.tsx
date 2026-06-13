@@ -53,5 +53,8 @@ export default function AnalyticsPage() {
     focusByDay.some((d) => d.key === dayKey(new Date(s.endedAt)))
   ).length;
 
-  
+  const bestDay = focusByDay.reduce(
+    (best, day) => (day.minutes > best.minutes ? day : best),
+    focusByDay[0]
+  );
 }
