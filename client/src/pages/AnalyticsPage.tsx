@@ -18,4 +18,10 @@ export default function AnalyticsPage() {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    getSessions()
+      .then(setSessions)
+      .finally(() => setLoading(false));
+  }, []);
+  
 }
