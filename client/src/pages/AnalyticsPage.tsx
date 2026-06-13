@@ -48,5 +48,10 @@ export default function AnalyticsPage() {
     });
   }, [sessions, last7Days]);
 
+  const totalWeekMinutes = focusByDay.reduce((sum, d) => sum + d.minutes, 0);
+  const sessionsThisWeek = sessions.filter((s) =>
+    focusByDay.some((d) => d.key === dayKey(new Date(s.endedAt)))
+  ).length;
+
   
 }
