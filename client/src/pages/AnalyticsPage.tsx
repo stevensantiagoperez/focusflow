@@ -32,4 +32,21 @@ export default function AnalyticsPage() {
       return d;
     });
   }, []);
+
+  const focusByDay = useMemo(() => {
+    return last7Days.map((day) => {
+      const key = dayKey(day);
+      const minutes = sessions
+        .filter((s) => s.mode === "focus" && dayKey(new Date(s.endedAt)) === key)
+        .reduce((sum, s) => sum + s.durationSeconds / 60, 0);
+
+      return {
+        key,
+        label: labelDay(day),
+        minutes: Math.round(minutes),
+      };
+    });
+  }, [sessions, last7Days]);
+
+  
 }
