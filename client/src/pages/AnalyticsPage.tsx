@@ -23,5 +23,13 @@ export default function AnalyticsPage() {
       .then(setSessions)
       .finally(() => setLoading(false));
   }, []);
-  
+
+
+  const last7Days = useMemo(() => {
+    return Array.from({ length: 7 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (6 - i));
+      return d;
+    });
+  }, []);
 }
