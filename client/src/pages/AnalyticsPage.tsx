@@ -63,5 +63,10 @@ export default function AnalyticsPage() {
   if (loading) {
     return <p className="text-slate-300">Loading analytics...</p>;
   }
-  
+
+  return (
+    <div className="space-y-6">
+      
+    </div>
+  )
 }
