@@ -80,6 +80,13 @@ export default function AnalyticsPage() {
           </p>
           <p className="mt-1 text-2xl font-semibold">{totalWeekMinutes}</p>
         </div>
+
+        <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+          <p className="text-xs uppercase tracking-wide text-slate-400">
+            Sessions
+          </p>
+          <p className="mt-1 text-2xl font-semibold">{sessionsThisWeek}</p>
+        </div>
     </div>
   )
 }
