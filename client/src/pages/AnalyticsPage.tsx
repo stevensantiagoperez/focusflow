@@ -59,4 +59,9 @@ export default function AnalyticsPage() {
   );
 
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
+
+  if (loading) {
+    return <p className="text-slate-300">Loading analytics...</p>;
+  }
+  
 }
