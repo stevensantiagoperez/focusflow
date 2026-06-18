@@ -66,7 +66,12 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      
+      <div>
+        <h1 className="text-3xl font-semibold tracking-tight">Analytics</h1>
+        <p className="text-slate-400 mt-1">
+          Your focus activity over the last 7 days.
+        </p>
+      </div>
     </div>
   )
 }
