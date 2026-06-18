@@ -57,4 +57,6 @@ export default function AnalyticsPage() {
     (best, day) => (day.minutes > best.minutes ? day : best),
     focusByDay[0]
   );
+
+  const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 }
