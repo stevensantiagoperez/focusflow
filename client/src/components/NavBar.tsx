@@ -23,6 +23,9 @@ export default function NavBar() {
           <NavLink to="/dashboard" className={linkClass}>
             Dashboard
           </NavLink>
+          <NavLink to="/analytics" className={linkClass}>
+            Analytics
+          </NavLink>
         </nav>
       </div>
     </header>
