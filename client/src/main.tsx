@@ -8,7 +8,7 @@ import TasksPage from "./pages/TasksPage";
 import TimerPage from "./pages/TimerPage";
 import DashboardPage from "./pages/DashboardPage";
 import TaskDetailPage from "./pages/TaskDetailPage";
-
+import AnalyticsPage from "./pages/AnalyticsPage";
 
 const router = createBrowserRouter([
   {
