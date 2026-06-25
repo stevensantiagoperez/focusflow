@@ -97,5 +97,30 @@ export default function AnalyticsPage() {
             {bestDay.minutes > 0 ? bestDay.label : "—"}
           </p>
         </div>
+  </div>
+
+  <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+        <h2 className="text-lg font-semibold mb-4">7-day focus chart</h2>
+
+        <div className="flex items-end gap-3 h-56">
+          {focusByDay.map((day) => {
+            const height = Math.max(8, (day.minutes / maxMinutes) * 180);
+
+            return (
+              <div key={day.key} className="flex flex-1 flex-col items-center gap-2">
+                <div className="text-xs text-slate-400">{day.minutes}m</div>
+                <div className="flex h-44 w-full items-end rounded-md bg-slate-950/60 overflow-hidden">
+                  <div
+                    className="w-full rounded-t-md bg-violet-500 transition-all"
+                    style={{ height }}
+                  />
+                </div>
+                <div className="text-xs text-slate-400">{day.label}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   )
 }
