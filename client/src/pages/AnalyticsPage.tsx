@@ -79,6 +79,13 @@ export default function AnalyticsPage() {
     }
   }
 
+  // Longest streak
+  const sortedDays = [...focusDays].sort();
+
+  let longestStreak = 0;
+  let running = 0;
+  let previous: Date | null = null;
+
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 
   if (loading) {
