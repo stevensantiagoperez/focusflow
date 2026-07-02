@@ -65,6 +65,9 @@ export default function AnalyticsPage() {
       .map((s) => dayKey(new Date(s.endedAt)))
   );
 
+  let currentStreak = 0;
+  const today = new Date();
+
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 
   if (loading) {
