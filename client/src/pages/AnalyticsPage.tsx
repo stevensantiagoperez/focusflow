@@ -58,6 +58,13 @@ export default function AnalyticsPage() {
     focusByDay[0]
   );
 
+  const streakInfo = useMemo(() => {
+  const focusDays = new Set(
+    sessions
+      .filter((s) => s.mode === "focus")
+      .map((s) => dayKey(new Date(s.endedAt)))
+  );
+
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 
   if (loading) {
