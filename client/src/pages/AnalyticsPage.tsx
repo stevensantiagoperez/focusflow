@@ -68,6 +68,17 @@ export default function AnalyticsPage() {
   let currentStreak = 0;
   const today = new Date();
 
+  while (true) {
+    const key = dayKey(today);
+
+    if (focusDays.has(key)) {
+      currentStreak++;
+      today.setDate(today.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 
   if (loading) {
