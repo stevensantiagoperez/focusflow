@@ -69,6 +69,9 @@ export default function AnalyticsPage() {
   const yesterday = new Date();
   yesterday.setDate(today.getDate() - 1);
 
+  const hasToday = focusDays.has(dayKey(today));
+  const hasYesterday = focusDays.has(dayKey(yesterday));
+
   let currentStreak = 0;
   const today = new Date();
 
