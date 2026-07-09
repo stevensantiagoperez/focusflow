@@ -154,6 +154,15 @@ export default function AnalyticsPage() {
     {streakInfo.currentStreak !== 1 ? "s" : ""}
   </p>
 </div>
+<div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
+  <p className="text-xs uppercase tracking-wide text-slate-400">
+    🏆 Longest streak
+  </p>
+  <p className="mt-1 text-2xl font-semibold">
+    {streakInfo.longestStreak} day
+    {streakInfo.longestStreak !== 1 ? "s" : ""}
+  </p>
+</div>
 </div>
 
   <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
