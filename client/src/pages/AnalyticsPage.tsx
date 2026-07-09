@@ -73,6 +73,13 @@ export default function AnalyticsPage() {
   const hasYesterday = focusDays.has(dayKey(yesterday));
 
   let currentStreak = 0;
+
+  // Allow streak to continue if user hasn't focused yet today
+  const cursor = new Date(
+    hasToday ? today : hasYesterday ? yesterday : today
+  );
+
+  let currentStreak = 0;
   const today = new Date();
 
   while (true) {
