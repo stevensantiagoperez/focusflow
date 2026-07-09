@@ -121,7 +121,7 @@ export default function AnalyticsPage() {
         </p>
       </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
   <div className="rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-3">
     <p className="text-xs uppercase tracking-wide text-slate-400">
       Focus minutes
