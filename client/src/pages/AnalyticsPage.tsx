@@ -65,6 +65,10 @@ export default function AnalyticsPage() {
       .map((s) => dayKey(new Date(s.endedAt)))
   );
 
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
   let currentStreak = 0;
   const today = new Date();
 
