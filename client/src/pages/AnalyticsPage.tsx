@@ -108,7 +108,13 @@ export default function AnalyticsPage() {
 
     longestStreak = Math.max(longestStreak, running);
   }
-  
+  return {
+    currentStreak,
+    longestStreak,
+    hasToday,
+  };
+}, [sessions]);
+
   while (true) {
     const key = dayKey(today);
 
