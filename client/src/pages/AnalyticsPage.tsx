@@ -89,6 +89,9 @@ export default function AnalyticsPage() {
     .sort((a, b) => a.getTime() - b.getTime());
 
 
+  let longestStreak = 0;
+  let running = 0;
+  
   let currentStreak = 0;
   const today = new Date();
 
