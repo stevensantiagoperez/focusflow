@@ -91,10 +91,24 @@ export default function AnalyticsPage() {
 
   let longestStreak = 0;
   let running = 0;
-  
+
   let currentStreak = 0;
   const today = new Date();
 
+  for (let i = 0; i < sortedDays.length; i++) {
+    if (i === 0) {
+      running = 1;
+    } else {
+      const diff =
+        (sortedDays[i].getTime() - sortedDays[i - 1].getTime()) /
+        (1000 * 60 * 60 * 24);
+
+      running = diff === 1 ? running + 1 : 1;
+    }
+
+    longestStreak = Math.max(longestStreak, running);
+  }
+  
   while (true) {
     const key = dayKey(today);
 
