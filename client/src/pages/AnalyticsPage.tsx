@@ -84,6 +84,11 @@ export default function AnalyticsPage() {
     cursor.setDate(cursor.getDate() - 1);
   }
 
+  const sortedDays = [...focusDays]
+    .map((d) => new Date(d))
+    .sort((a, b) => a.getTime() - b.getTime());
+
+
   let currentStreak = 0;
   const today = new Date();
 
