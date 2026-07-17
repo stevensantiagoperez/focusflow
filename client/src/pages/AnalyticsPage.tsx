@@ -211,6 +211,33 @@ export default function AnalyticsPage() {
   </p>
 </div>
 </div>
+<div className="rounded-2xl border border-violet-700/40 bg-violet-950/20 p-5">
+  <h2 className="text-lg font-semibold mb-2">
+    🔥 Streak Status
+  </h2>
+
+  {streakInfo.currentStreak === 0 ? (
+    <p className="text-slate-300">
+      Start a focus session today to begin a new streak.
+    </p>
+  ) : streakInfo.hasToday ? (
+    <p className="text-slate-300">
+      Nice work! You've maintained your streak for{" "}
+      <span className="font-semibold text-violet-300">
+        {streakInfo.currentStreak} day
+        {streakInfo.currentStreak !== 1 ? "s" : ""}
+      </span>.
+    </p>
+  ) : (
+    <p className="text-slate-300">
+      You're on a{" "}
+      <span className="font-semibold text-violet-300">
+        {streakInfo.currentStreak}-day streak
+      </span>
+      . Complete one focus session today to keep it alive!
+    </p>
+  )}
+</div>
 
   <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
         <h2 className="text-lg font-semibold mb-4">7-day focus chart</h2>
