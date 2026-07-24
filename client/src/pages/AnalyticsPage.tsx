@@ -183,6 +183,9 @@ export default function AnalyticsPage() {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const currentWeekStart = startOfWeek(today);
+  const firstWeekStart = addDays(currentWeekStart, -(11 * 7));
+
   }
 
   if (loading) {
