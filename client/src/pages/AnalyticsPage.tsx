@@ -180,6 +180,9 @@ export default function AnalyticsPage() {
       minutesByDay.set(key, (minutesByDay.get(key) ?? 0) + minutes);
     }
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
   }
 
   if (loading) {
