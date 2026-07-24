@@ -169,7 +169,17 @@ export default function AnalyticsPage() {
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 
   const heatmapData = useMemo(() => {
-    
+    const minutesByDay = new Map<string, number>();
+
+    for (const session of sessions) {
+      if (session.mode !== "focus") continue;
+
+        const key = dayKey(new Date(session.endedAt));
+        const minutes = session.durationSeconds / 60;
+
+      minutesByDay.set(key, (minutesByDay.get(key) ?? 0) + minutes);
+    }
+
   }
 
   if (loading) {
