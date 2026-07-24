@@ -14,6 +14,13 @@ function labelDay(d: Date) {
   return d.toLocaleDateString(undefined, { weekday: "short" });
 }
 
+function startOfWeek(date: Date) {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  result.setDate(result.getDate() - result.getDay());
+  return result;
+}
+
 export default function AnalyticsPage() {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [loading, setLoading] = useState(true);
