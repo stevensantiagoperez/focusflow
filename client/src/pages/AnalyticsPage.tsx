@@ -47,6 +47,8 @@ function heatmapClass(minutes: number, isFuture: boolean) {
   if (minutes < 120) {
     return "bg-violet-600 border-violet-500";
   }
+
+  return "bg-violet-400 border-violet-300";
 }
 
 export default function AnalyticsPage() {
