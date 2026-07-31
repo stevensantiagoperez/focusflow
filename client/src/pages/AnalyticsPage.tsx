@@ -28,7 +28,9 @@ function addDays(date: Date, amount: number) {
 }
 
 function heatmapClass(minutes: number, isFuture: boolean) {
-  
+  if (isFuture) {
+    return "bg-slate-950/40 border-slate-900";
+  }
 }
 
 export default function AnalyticsPage() {
