@@ -27,6 +27,10 @@ function addDays(date: Date, amount: number) {
   return result;
 }
 
+function heatmapClass(minutes: number, isFuture: boolean) {
+  
+}
+
 export default function AnalyticsPage() {
   const [sessions, setSessions] = useState<FocusSession[]>([]);
   const [loading, setLoading] = useState(true);
