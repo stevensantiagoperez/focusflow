@@ -289,6 +289,18 @@ export default function AnalyticsPage() {
       Your focus activity over the last 12 weeks.
     </p>
   </div>
+
+  <div className="flex gap-3">
+    {/* Day labels */}
+    <div className="grid grid-rows-7 gap-1 pt-1 text-[10px] text-slate-500">
+      <span>Sun</span>
+      <span>Mon</span>
+      <span>Tue</span>
+      <span>Wed</span>
+      <span>Thu</span>
+      <span>Fri</span>
+      <span>Sat</span>
+    </div>
 <div className="rounded-2xl border border-violet-700/40 bg-violet-950/20 p-5">
   <h2 className="text-lg font-semibold mb-2">
     🔥 Streak Status
