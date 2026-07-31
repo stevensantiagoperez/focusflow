@@ -282,6 +282,13 @@ export default function AnalyticsPage() {
   </p>
 </div>
 </div>
+<div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+  <div className="mb-4">
+    <h2 className="text-lg font-semibold">Focus consistency</h2>
+    <p className="mt-1 text-sm text-slate-400">
+      Your focus activity over the last 12 weeks.
+    </p>
+  </div>
 <div className="rounded-2xl border border-violet-700/40 bg-violet-950/20 p-5">
   <h2 className="text-lg font-semibold mb-2">
     🔥 Streak Status
