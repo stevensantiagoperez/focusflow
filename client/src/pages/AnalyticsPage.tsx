@@ -186,7 +186,21 @@ export default function AnalyticsPage() {
     const currentWeekStart = startOfWeek(today);
   const firstWeekStart = addDays(currentWeekStart, -(11 * 7));
 
-  }
+   return Array.from({ length: 12 }, (_, weekIndex) => {
+    return Array.from({ length: 7 }, (_, dayIndex) => {
+      const date = addDays(firstWeekStart, weekIndex * 7 + dayIndex);
+      const key = dayKey(date);
+      const minutes = Math.round(minutesByDay.get(key) ?? 0);
+
+      return {
+        key,
+        date,
+        minutes,
+        isFuture: date.getTime() > today.getTime(),
+      };
+    });
+  });
+}, [sessions]);
 
   if (loading) {
     return <p className="text-slate-300">Loading analytics...</p>;
