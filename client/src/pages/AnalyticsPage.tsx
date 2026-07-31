@@ -31,6 +31,22 @@ function heatmapClass(minutes: number, isFuture: boolean) {
   if (isFuture) {
     return "bg-slate-950/40 border-slate-900";
   }
+
+  if (minutes === 0) {
+    return "bg-slate-800 border-slate-700";
+  }
+
+  if (minutes < 30) {
+    return "bg-violet-950 border-violet-900";
+  }
+
+  if (minutes < 60) {
+    return "bg-violet-800 border-violet-700";
+  }
+
+  if (minutes < 120) {
+    return "bg-violet-600 border-violet-500";
+  }
 }
 
 export default function AnalyticsPage() {
