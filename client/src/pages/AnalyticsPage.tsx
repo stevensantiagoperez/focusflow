@@ -151,44 +151,6 @@ export default function AnalyticsPage() {
   };
 }, [sessions]);
 
-  while (true) {
-    const key = dayKey(today);
-
-    if (focusDays.has(key)) {
-      currentStreak++;
-      today.setDate(today.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-
-  // Longest streak
-  const sortedDays = [...focusDays].sort();
-
-  let longestStreak = 0;
-  let running = 0;
-  let previous: Date | null = null;
-
-  for (const key of sortedDays) {
-    const date = new Date(key);
-
-    if (!previous) {
-      running = 1;
-    } else {
-      const diff =
-        (date.getTime() - previous.getTime()) /
-        (1000 * 60 * 60 * 24);
-
-      running = diff === 1 ? running + 1 : 1;
-    }
-
-    longestStreak = Math.max(longestStreak, running);
-    previous = date;
-  }
-
-  return { currentStreak, longestStreak };
-}, [sessions]);
-
   const maxMinutes = Math.max(...focusByDay.map((d) => d.minutes), 1);
 
   const heatmapData = useMemo(() => {
