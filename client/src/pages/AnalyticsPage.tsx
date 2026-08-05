@@ -301,6 +301,26 @@ export default function AnalyticsPage() {
       <span>Fri</span>
       <span>Sat</span>
     </div>
+    {/* Heatmap */}
+    <div className="overflow-x-auto pb-2">
+      <div className="grid grid-flow-col grid-rows-7 gap-1">
+        {heatmapData.flatMap((week) =>
+          week.map((day) => (
+            <div
+              key={day.key}
+              title={`${day.date.toLocaleDateString()}: ${
+                day.minutes
+              } focus minute${day.minutes === 1 ? "" : "s"}`}
+              className={`h-3 w-3 rounded-sm border transition-transform hover:scale-125 ${heatmapClass(
+                day.minutes,
+                day.isFuture
+              )}`}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  </div>
 <div className="rounded-2xl border border-violet-700/40 bg-violet-950/20 p-5">
   <h2 className="text-lg font-semibold mb-2">
     🔥 Streak Status
