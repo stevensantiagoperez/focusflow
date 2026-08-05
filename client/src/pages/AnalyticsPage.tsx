@@ -321,6 +321,19 @@ export default function AnalyticsPage() {
       </div>
     </div>
   </div>
+
+  {/* Legend */}
+  <div className="mt-4 flex items-center justify-end gap-2 text-xs text-slate-500">
+    <span>Less</span>
+
+    <div className="h-3 w-3 rounded-sm border border-slate-700 bg-slate-800" />
+    <div className="h-3 w-3 rounded-sm border border-violet-900 bg-violet-950" />
+    <div className="h-3 w-3 rounded-sm border border-violet-700 bg-violet-800" />
+    <div className="h-3 w-3 rounded-sm border border-violet-500 bg-violet-600" />
+    <div className="h-3 w-3 rounded-sm border border-violet-300 bg-violet-400" />
+
+    <span>More</span>
+  </div>
 <div className="rounded-2xl border border-violet-700/40 bg-violet-950/20 p-5">
   <h2 className="text-lg font-semibold mb-2">
     🔥 Streak Status
