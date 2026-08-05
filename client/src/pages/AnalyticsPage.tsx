@@ -114,7 +114,7 @@ export default function AnalyticsPage() {
   const cursor = new Date(
     hasToday ? today : hasYesterday ? yesterday : today
   );
-
+  let currentStreak = 0;
   while (focusDays.has(dayKey(cursor))) {
     currentStreak++;
     cursor.setDate(cursor.getDate() - 1);
@@ -128,7 +128,7 @@ export default function AnalyticsPage() {
   let longestStreak = 0;
   let running = 0;
 
-  let currentStreak = 0;
+  
   const today = new Date();
 
   for (let i = 0; i < sortedDays.length; i++) {
