@@ -9,6 +9,7 @@ import TimerPage from "./pages/TimerPage";
 import DashboardPage from "./pages/DashboardPage";
 import TaskDetailPage from "./pages/TaskDetailPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
+import { TimerProvider } from "./context/TimerContext";
 
 const router = createBrowserRouter([
   {
