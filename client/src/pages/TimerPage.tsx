@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createSession, getTasks, updateTask } from "../services/apiClient";
 import { useSearchParams } from "react-router-dom";
+import { useTimer } from "../context/TimerContext";
 
 const TIMER_SETTINGS_KEY = "focusflow:timer-settings";
 
