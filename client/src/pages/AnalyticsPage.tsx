@@ -128,9 +128,6 @@ export default function AnalyticsPage() {
   let longestStreak = 0;
   let running = 0;
 
-  
-  const today = new Date();
-
   for (let i = 0; i < sortedDays.length; i++) {
     if (i === 0) {
       running = 1;
