@@ -36,5 +36,11 @@ export default function FloatingTimer() {
             {formatMMSS(secondsLeft)}
           </p>
         </div>
+
+        <span
+          className={`h-2.5 w-2.5 rounded-full ${
+            isRunning ? "bg-emerald-400" : "bg-slate-600"
+          }`}
+        />
     )
 }
