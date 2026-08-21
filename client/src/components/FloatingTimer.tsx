@@ -12,3 +12,15 @@ function formatMMSS(totalSeconds: number) {
 
   return `${pad2(minutes)}:${pad2(seconds)}`;
 }
+
+
+export default function FloatingTimer() {
+  const {
+    mode,
+    secondsLeft,
+    isRunning,
+    toggleStartPause,
+    resetTimer,
+  } = useTimer();
+
+}
