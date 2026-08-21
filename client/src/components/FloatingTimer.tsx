@@ -31,5 +31,10 @@ export default function FloatingTimer() {
           <p className="text-xs uppercase tracking-wide text-slate-400">
             {mode === "focus" ? "Focus" : "Break"}
           </p>
+
+    <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-100">
+            {formatMMSS(secondsLeft)}
+          </p>
+        </div>
     )
 }
