@@ -5,3 +5,10 @@ import { useTimer } from "../context/TimerContext";
 function pad2(n: number) {
   return n.toString().padStart(2, "0");
 }
+
+function formatMMSS(totalSeconds: number) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return `${pad2(minutes)}:${pad2(seconds)}`;
+}
