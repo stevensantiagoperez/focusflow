@@ -22,8 +22,6 @@ type Task = {
   goalMinutes: number;
 };
 
-type Mode = "focus" | "break";
-
 function pad2(n: number) {
   return n.toString().padStart(2, "0");
 }
