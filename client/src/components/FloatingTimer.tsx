@@ -42,5 +42,6 @@ export default function FloatingTimer() {
             isRunning ? "bg-emerald-400" : "bg-slate-600"
           }`}
         />
+        </div>
     )
 }
