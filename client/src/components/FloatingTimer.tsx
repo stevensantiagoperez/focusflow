@@ -61,6 +61,14 @@ export default function FloatingTimer() {
         >
           Reset
         </button>
+
+        <Link
+        to="/timer"
+        className="mt-3 block text-center text-xs text-violet-300 hover:underline"
+      >
+        Open full timer
+      </Link>
+    </div>
       </div>
     )
 }
