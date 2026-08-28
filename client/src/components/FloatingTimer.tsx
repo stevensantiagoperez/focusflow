@@ -43,5 +43,24 @@ export default function FloatingTimer() {
           }`}
         />
         </div>
+
+
+        <div className="mt-4 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={toggleStartPause}
+          className="flex-1 rounded-md bg-violet-600 px-3 py-2 text-sm font-medium text-white hover:bg-violet-500"
+        >
+          {isRunning ? "Pause" : "Start"}
+        </button>
+
+        <button
+          type="button"
+          onClick={resetTimer}
+          className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800"
+        >
+          Reset
+        </button>
+      </div>
     )
 }
