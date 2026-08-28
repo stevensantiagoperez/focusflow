@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
+import FloatingTimer from "../components/FloatingTimer";
 
 export default function AppLayout() {
   return (
