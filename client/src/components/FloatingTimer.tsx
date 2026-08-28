@@ -23,6 +23,12 @@ export default function FloatingTimer() {
     resetTimer,
   } = useTimer();
 
+  const location = useLocation();
+
+if (location.pathname === "/timer") {
+  return null;
+}
+
 
   return (
     <div className="fixed bottom-5 right-5 z-50 w-56 rounded-2xl border border-slate-700 bg-slate-950/95 p-4 shadow-xl backdrop-blur">
