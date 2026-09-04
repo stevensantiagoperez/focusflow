@@ -34,3 +34,7 @@ type TimerContextType = {
 };
 
 const TimerContext = createContext<TimerContextType | null>(null);
+
+export function TimerProvider({ children }: { children: ReactNode }) {
+    
+}
