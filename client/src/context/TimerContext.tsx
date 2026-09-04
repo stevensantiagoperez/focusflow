@@ -15,4 +15,12 @@ type TimerContextType = {
     mode: Mode;
     focusMinutes: number;
     setFocusMinutes: (minutes: number) => void;
+
+
+    breakMinutes: number;
+    setBreakMinutes: (minutes: number) => void;
+
+    secondsLeft: number;
+    isRunning: boolean;
+
 }
