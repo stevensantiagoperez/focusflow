@@ -23,4 +23,12 @@ type TimerContextType = {
     secondsLeft: number;
     isRunning: boolean;
 
-}
+    selectedTaskId: number | null;
+    setSelectedTaskId: (id: number | null) => void;
+
+    toggleStartPause: () => void;
+    resetTimer: () => void;
+    switchMode: (mode: Mode) => void;
+
+    progress: number;
+};
