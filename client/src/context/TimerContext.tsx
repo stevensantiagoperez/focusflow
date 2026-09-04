@@ -32,3 +32,5 @@ type TimerContextType = {
 
     progress: number;
 };
+
+const TimerContext = createContext<TimerContextType | null>(null);
