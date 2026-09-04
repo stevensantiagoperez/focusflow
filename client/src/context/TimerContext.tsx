@@ -6,12 +6,9 @@ import {
   useRef,
   useState,
 } from "react";
+import type { ReactNode } from "react";
 
 
+type Mode = "focus" | "break";
 
 
-
-
-<TimerProvider>
-    <RouterProvider router={router} />
-</TimerProvider>
