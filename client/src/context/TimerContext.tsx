@@ -46,6 +46,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
 
 
-   const intervalRef = useRef<number | null>(null);
+  const intervalRef = useRef<number | null>(null);
+
+  const totalSeconds =
+    (mode === "focus" ? focusMinutes : breakMinutes) * 60;
 
 }
