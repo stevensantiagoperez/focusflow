@@ -36,5 +36,7 @@ type TimerContextType = {
 const TimerContext = createContext<TimerContextType | null>(null);
 
 export function TimerProvider({ children }: { children: ReactNode }) {
-    
+  
+  const [mode, setMode] = useState<Mode>("focus");
+  const [focusMinutes, setFocusMinutes] = useState(25);
 }
