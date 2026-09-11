@@ -45,4 +45,7 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   const [isRunning, setIsRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(25 * 60);
 
+
+   const intervalRef = useRef<number | null>(null);
+
 }
