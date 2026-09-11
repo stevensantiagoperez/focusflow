@@ -51,4 +51,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   const totalSeconds =
     (mode === "focus" ? focusMinutes : breakMinutes) * 60;
 
+  const progress = useMemo(() => {
+    if (totalSeconds === 0) return 0;
+
+    return secondsLeft / totalSeconds;
+  }, [secondsLeft, totalSeconds]);
 }
