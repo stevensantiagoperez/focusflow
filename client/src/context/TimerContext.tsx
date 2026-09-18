@@ -70,4 +70,12 @@ export function TimerProvider({ children }: { children: ReactNode }) {
         return prev - 1;
       });
     }, 1000);
+
+
+  return () => {
+      if (intervalRef.current !== null) {
+        window.clearInterval(intervalRef.current);
+      }
+    };
+  }, [isRunning]);
 }
