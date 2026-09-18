@@ -91,5 +91,6 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 
   function switchMode(nextMode: Mode) {
     setMode(nextMode);
+    setIsRunning(false);
   }
 }
