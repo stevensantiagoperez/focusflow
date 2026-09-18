@@ -88,4 +88,8 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     setIsRunning(false);
     setSecondsLeft(totalSeconds);
   }
+
+  function switchMode(nextMode: Mode) {
+    setMode(nextMode);
+  }
 }
