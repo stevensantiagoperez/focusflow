@@ -56,4 +56,18 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 
     return secondsLeft / totalSeconds;
   }, [secondsLeft, totalSeconds]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    intervalRef.current = window.setInterval(() => {
+      setSecondsLeft((prev) => {
+        if (prev <= 1) {
+          setIsRunning(false);
+          return 0;
+        }
+
+        return prev - 1;
+      });
+    }, 1000);
 }
