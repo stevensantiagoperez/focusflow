@@ -83,4 +83,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   function toggleStartPause() {
     setIsRunning((prev) => !prev);
   }
+
+  function resetTimer() {
+    setIsRunning(false);
+    setSecondsLeft(totalSeconds);
+  }
 }
