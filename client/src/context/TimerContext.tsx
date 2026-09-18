@@ -78,4 +78,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
       }
     };
   }, [isRunning]);
+
+
+  function toggleStartPause() {
+    setIsRunning((prev) => !prev);
+  }
 }
