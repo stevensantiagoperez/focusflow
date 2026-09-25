@@ -92,5 +92,11 @@ export function TimerProvider({ children }: { children: ReactNode }) {
   function switchMode(nextMode: Mode) {
     setMode(nextMode);
     setIsRunning(false);
+
+    if (nextMode === "focus") {
+      setSecondsLeft(focusMinutes * 60);
+    } else {
+      setSecondsLeft(breakMinutes * 60);
+    }
   }
 }
