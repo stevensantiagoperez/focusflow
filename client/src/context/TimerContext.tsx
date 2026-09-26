@@ -106,6 +106,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
       mode,
       focusMinutes,
       setFocusMinutes,
+
+      breakMinutes,
+      setBreakMinutes,
     }}
     >
 
