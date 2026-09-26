@@ -102,7 +102,11 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 
   return (
     <TimerContext.Provider
-    
+    value={{
+      mode,
+      focusMinutes,
+      setFocusMinutes,
+    }}
     >
 
     </TimerContext.Provider>
