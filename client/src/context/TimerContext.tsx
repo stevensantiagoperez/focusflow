@@ -123,7 +123,7 @@ export function TimerProvider({ children }: { children: ReactNode }) {
       progress,
     }}
     >
-
+      {children}
     </TimerContext.Provider>
   )
 }
