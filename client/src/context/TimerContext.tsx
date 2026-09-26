@@ -109,6 +109,18 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 
       breakMinutes,
       setBreakMinutes,
+
+      secondsLeft,
+      isRunning,
+
+      selectedTaskId,
+      setSelectedTaskId,
+
+      toggleStartPause,
+      resetTimer,
+      switchMode,
+
+      progress,
     }}
     >
 
