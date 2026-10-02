@@ -129,5 +129,5 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 }
 
 export function useTimer() {
-  
+  const context = useContext(TimerContext);
 }
