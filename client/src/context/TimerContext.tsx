@@ -127,3 +127,7 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     </TimerContext.Provider>
   )
 }
+
+export function useTimer() {
+  
+}
