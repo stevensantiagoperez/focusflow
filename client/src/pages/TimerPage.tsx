@@ -65,13 +65,7 @@ export default function TimerPage() {
   );
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  const [mode, setMode] = useState<Mode>("focus");
-  const [focusMinutes, setFocusMinutes] = useState(
-    savedSettings.focusMinutes ?? 25
-  );
-  const [breakMinutes, setBreakMinutes] = useState(
-    savedSettings.breakMinutes ?? 5
-  );
+
 
   const [isRunning, setIsRunning] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(() => focusMinutes * 60);
