@@ -33,6 +33,23 @@ function formatMMSS(totalSeconds: number) {
 }
 
 export default function TimerPage() {
+
+  const {
+  mode,
+  focusMinutes,
+  setFocusMinutes,
+  breakMinutes,
+  setBreakMinutes,
+  secondsLeft,
+  isRunning,
+  selectedTaskId,
+  setSelectedTaskId,
+  toggleStartPause,
+  resetTimer,
+  switchMode,
+  progress,
+} = useTimer();
+
   const savedSettings = (() => {
     try {
       const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
