@@ -1,19 +1,7 @@
 import { useEffect, useState } from "react";
-import {
-  createSession,
-  getTasks,
-  updateTask,
-} from "../services/apiClient";
+import { useSearchParams } from "react-router-dom";
+import { getTasks, updateTask } from "../services/apiClient";
 import { useTimer } from "../context/TimerContext";
-
-
-const TIMER_SETTINGS_KEY = "focusflow:timer-settings";
-
-type TimerSettings = {
-  focusMinutes: number;
-  breakMinutes: number;
-  selectedTaskId: number | null;
-};
 
 type Task = {
   id: number;
@@ -33,353 +21,421 @@ function formatMMSS(totalSeconds: number) {
 }
 
 export default function TimerPage() {
-
   const {
-  mode,
-  focusMinutes,
-  setFocusMinutes,
-  breakMinutes,
-  setBreakMinutes,
-  secondsLeft,
-  isRunning,
-  selectedTaskId,
-  setSelectedTaskId,
-  toggleStartPause,
-  resetTimer,
-  switchMode,
-  progress,
-} = useTimer();
-
-  const savedSettings = (() => {
-    try {
-      const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
-      return raw ? (JSON.parse(raw) as Partial<TimerSettings>) : {};
-    } catch {
-      return {};
-    }
-  })();
+    mode,
+    focusMinutes,
+    setFocusMinutes,
+    breakMinutes,
+    setBreakMinutes,
+    secondsLeft,
+    isRunning,
+    selectedTaskId,
+    setSelectedTaskId,
+    toggleStartPause,
+    resetTimer,
+    switchMode,
+    progress,
+    completedTaskId,
+    clearCompletedTaskPrompt,
+    saveError,
+    toastMessage,
+  } = useTimer();
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [saveError, setSaveError] = useState<string | null>(null);
-
-  const [showCompletePrompt, setShowCompletePrompt] = useState(false);
-  const [completedTaskTitle, setCompletedTaskTitle] = useState<string | null>(null);
   const [completeError, setCompleteError] = useState<string | null>(null);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-
   const [searchParams] = useSearchParams();
-
-  const intervalRef = useRef<number | null>(null);
-
-  const totalSecondsForMode = useMemo(() => {
-    return (mode === "focus" ? focusMinutes : breakMinutes) * 60;
-  }, [mode, focusMinutes, breakMinutes]);
+  const taskIdParam = searchParams.get("taskId");
 
   useEffect(() => {
-  const settings: TimerSettings = {
-    focusMinutes,
-    breakMinutes,
-    selectedTaskId,
-  };
-
-  localStorage.setItem(TIMER_SETTINGS_KEY, JSON.stringify(settings));
-}, [focusMinutes, breakMinutes, selectedTaskId]);
-
-  useEffect(() => {
-  getTasks()
-    .then((data) => {
-      setTasks(data);
-
-      const param = searchParams.get("taskId");
-      const fromUrl = param ? Number(param) : null;
-
-      setSelectedTaskId((current) => {
-  // URL taskId wins
-  if (fromUrl !== null && data.some((t: Task) => t.id === fromUrl)) {
-    return fromUrl;
-  }
-
-  if (current !== null && data.some((t: Task) => t.id === current)) {
-    return current;
-  }
-
-  const firstOpen = data.find((t: Task) => !t.completed);
-  return firstOpen ? firstOpen.id : null;
-});
-
-})
-.catch(() => {
-      // timer can still work without tasks
-    });
-}, [searchParams]);
-
-useEffect(() => {
-  if (!toastMessage) return;
-
-  const timeout = window.setTimeout(() => {
-    setToastMessage(null);
-  }, 3000);
-
-  return () => window.clearTimeout(timeout);
-}, [toastMessage]);
-
-  // When mode/durations change AND timer isn't running, reset secondsLeft to match
-  useEffect(() => {
-    if (!isRunning) {
-      setSecondsLeft(totalSecondsForMode);
-    }
-  }, [totalSecondsForMode, isRunning]);
-
-
-  // When timer hits 0, auto switch modes
-  useEffect(() => {
-    if (!isRunning) return;
-    if (secondsLeft > 0) return;
-
-    async function finalize() {
-      setIsRunning(false);
-
-      // Save only focus sessions
-      if (mode === "focus") {
-        setSaveError(null);
-        const session = {
-          id: crypto.randomUUID(),
-          taskId: selectedTaskId,
-          mode: "focus" as const,
-          durationSeconds: focusMinutes * 60,
-          endedAt: new Date().toISOString(),
-        };
-        try {
-          await createSession(session);
-          const selectedTask = tasks.find((t) => t.id === selectedTaskId);
-
-setToastMessage(
-  selectedTask
-    ? `🎉 Focus session saved for "${selectedTask.title}"`
-    : "🎉 Focus session saved"
-);
-          // Show prompt to complete task
-          if (selectedTaskId !== null) {
-            const t = tasks.find((x) => x.id === selectedTaskId);
-            setCompletedTaskTitle(t?.title ?? "this task");
-            setShowCompletePrompt(true);
-          }
-          } catch (e) {
-              const msg = e instanceof Error ? e.message : "Failed to save session";
-              setSaveError(msg);
-            }
-      }
-
-      setMode((prev) => (prev === "focus" ? "break" : "focus"));
-    }
-
-    finalize();
-  }, [secondsLeft, isRunning, mode, focusMinutes, selectedTaskId]);
-
-  function resetTimer() {
-    setIsRunning(false);
-    setSecondsLeft(totalSecondsForMode);
-  }
-
-  function switchMode(next: Mode) {
-    setIsRunning(false);
-    setMode(next);
-  }
+    let active = true;
+    getTasks()
+      .then((data: Task[]) => {
+        if (!active) return;
+        setTasks(data);
+        const fromUrl = taskIdParam !== null ? Number(taskIdParam) : null;
+        if (fromUrl !== null && data.some((t) => t.id === fromUrl)) {
+          setSelectedTaskId(fromUrl);
+        } else if (selectedTaskId === null) {
+          const firstOpen = data.find((t) => !t.completed);
+          if (firstOpen) setSelectedTaskId(firstOpen.id);
+        }
+      })
+      .catch(() => {
+        // Timer remains usable even if tasks cannot load.
+      });
+    return () => { active = false; };
+    // Only reload when the taskId URL parameter changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskIdParam, setSelectedTaskId]);
 
   async function markSelectedTaskComplete() {
-  if (selectedTaskId === null) return;
-
-  setCompleteError(null);
-  try {
-    await updateTask(selectedTaskId, { completed: true });
-
-    // Update local tasks list so UI updates immediately
-    setTasks((prev) =>
-      prev.map((t) => (t.id === selectedTaskId ? { ...t, completed: true } : t))
-    );
-
-    setShowCompletePrompt(false);
-  } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : "Failed to complete task";
-    setCompleteError(msg);
+    if (completedTaskId === null) return;
+    setCompleteError(null);
+    try {
+      await updateTask(completedTaskId, { completed: true });
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === completedTaskId ? { ...t, completed: true } : t
+        )
+      );
+      clearCompletedTaskPrompt();
+    } catch (e: unknown) {
+      setCompleteError(e instanceof Error ? e.message : "Failed to complete task");
+    }
   }
-}
 
   return (
+
     <div className="space-y-6">
 
+
+
       {toastMessage && (
+
   <div className="fixed top-20 right-4 z-50 rounded-lg border border-violet-700/60 bg-violet-950/90 px-4 py-3 text-sm text-violet-100 shadow-[0_0_20px_rgba(139,92,246,0.25)] backdrop-blur">
+
     {toastMessage}
+
   </div>
+
 )}
+
+
 
     {saveError && (
+
       <p className="text-sm text-red-400 bg-red-950/40 border border-red-700 rounded-md px-3 py-2">
+
         Error: {saveError}
+
       </p>
+
     )}
 
-    {showCompletePrompt && (
+
+
+    {completedTaskId !== null && (
+
   <div className="rounded-xl border border-emerald-700/60 bg-emerald-950/30 px-4 py-3">
+
     <p className="text-sm text-emerald-200">
+
       Focus session complete. Mark{" "}
-      <span className="font-semibold">{completedTaskTitle}</span> as completed?
+
+      <span className="font-semibold">{tasks.find((task) => task.id === completedTaskId)?.title ?? "this task"}</span> as completed?
+
     </p>
 
+
+
     {completeError && (
+
       <p className="mt-2 text-sm text-red-300">Error: {completeError}</p>
+
     )}
 
+
+
     <div className="mt-3 flex items-center gap-2">
-      <button
-        onClick={markSelectedTaskComplete}
-        className="rounded-md bg-emerald-600 px-3 py-2 text-sm font-medium hover:bg-emerald-500 transition-colors"
-        type="button"
-      >
-        Complete
-      </button>
 
       <button
-        onClick={() => setShowCompletePrompt(false)}
-        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors"
+
+        onClick={markSelectedTaskComplete}
+
+        className="rounded-md bg-emerald-600 px-3 py-2 text-sm font-medium hover:bg-emerald-500 transition-colors"
+
         type="button"
+
       >
-        Not now
+
+        Complete
+
       </button>
+
+
+
+      <button
+
+        onClick={() => clearCompletedTaskPrompt()}
+
+        className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors"
+
+        type="button"
+
+      >
+
+        Not now
+
+      </button>
+
     </div>
+
   </div>
+
 )}
 
+
+
     <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+
       <h2 className="text-lg font-semibold mb-3">Working on</h2>
 
+
+
       <select
+
         value={selectedTaskId ?? ""}
+
         onChange={(e) =>
+
           setSelectedTaskId(e.target.value ? Number(e.target.value) : null)
+
         }
+
         disabled={isRunning}
+
         className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+
       >
+
         <option value="">No task selected</option>
+
         {tasks.map((t) => (
+
           <option key={t.id} value={t.id}>
+
             {t.completed ? "✅ " : ""}
+
             {t.title}
+
           </option>
+
         ))}
+
       </select>
 
+
+
       <p className="mt-2 text-xs text-slate-500">
+
         Tip: pick a task before starting. (Disabled while running.)
+
       </p>
+
     </div>
+
+
 
     <div className="flex items-center justify-between gap-3">
+
       <h1 className="text-3xl font-semibold tracking-tight">Timer</h1>
+
         <div className="flex gap-2">
+
           <button
+
             onClick={() => switchMode("focus")}
+
             className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
+
               mode === "focus"
+
                 ? "border-violet-500 bg-violet-600/20 text-slate-100"
+
                 : "border-slate-800 bg-slate-900 text-slate-300 hover:text-slate-100"
+
             }`}
+
           >
+
             Focus
+
           </button>
+
           <button
+
             onClick={() => switchMode("break")}
+
             className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
+
               mode === "break"
+
                 ? "border-emerald-500 bg-emerald-600/20 text-slate-100"
+
                 : "border-slate-800 bg-slate-900 text-slate-300 hover:text-slate-100"
+
             }`}
+
           >
+
             Break
+
           </button>
+
         </div>
+
       </div>
+
+
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 shadow-lg">
+
         <p className="text-sm text-slate-400 mb-2">
+
           Mode:{" "}
+
           <span className="text-slate-100 font-medium">
+
             {mode === "focus" ? "Focus Session" : "Break"}
+
           </span>
+
         </p>
+
+
 
         <div className="flex items-center justify-center">
+
           <div className="relative w-56 h-56">
+
             <div className="absolute inset-0 rounded-full border border-slate-800 bg-slate-950/30" />
+
             <div
+
               className="absolute inset-0 rounded-full"
+
               style={{
+
                 background: `conic-gradient(rgba(139,92,246,0.9) ${
+
                   progress * 360
+
                 }deg, rgba(30,41,59,0.7) 0deg)`,
+
               }}
+
             />
+
             <div className="absolute inset-3 rounded-full bg-slate-950 flex items-center justify-center border border-slate-800">
+
               <span className="text-5xl font-semibold tabular-nums">
+
                 {formatMMSS(Math.max(0, secondsLeft))}
+
               </span>
+
             </div>
+
           </div>
+
         </div>
+
+
 
         <div className="mt-6 flex items-center justify-center gap-2">
+
           <button
+
             onClick={toggleStartPause}
+
             className="rounded-md bg-violet-600 px-4 py-2 text-sm font-medium hover:bg-violet-500 transition-colors"
+
           >
+
             {isRunning ? "Pause" : "Start"}
+
           </button>
+
           <button
+
             onClick={resetTimer}
+
             className="rounded-md border border-slate-700 bg-slate-900 px-4 py-2 text-sm text-slate-200 hover:bg-slate-800 transition-colors"
+
           >
+
             Reset
+
           </button>
+
         </div>
+
       </div>
+
+
 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5">
+
         <h2 className="text-lg font-semibold mb-4">Settings</h2>
 
+
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <label className="space-y-1">
-            <span className="text-sm text-slate-300">Focus minutes</span>
-            <input
-              type="number"
-              min={1}
-              max={180}
-              value={focusMinutes}
-              disabled={isRunning}
-              onChange={(e) => setFocusMinutes(Number(e.target.value))}
-              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
-            />
-          </label>
 
           <label className="space-y-1">
-            <span className="text-sm text-slate-300">Break minutes</span>
+
+            <span className="text-sm text-slate-300">Focus minutes</span>
+
             <input
+
               type="number"
+
               min={1}
-              max={60}
-              value={breakMinutes}
+
+              max={180}
+
+              value={focusMinutes}
+
               disabled={isRunning}
-              onChange={(e) => setBreakMinutes(Number(e.target.value))}
+
+              onChange={(e) => setFocusMinutes(Number(e.target.value))}
+
               className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+
             />
+
           </label>
+
+
+
+          <label className="space-y-1">
+
+            <span className="text-sm text-slate-300">Break minutes</span>
+
+            <input
+
+              type="number"
+
+              min={1}
+
+              max={60}
+
+              value={breakMinutes}
+
+              disabled={isRunning}
+
+              onChange={(e) => setBreakMinutes(Number(e.target.value))}
+
+              className="w-full rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+
+            />
+
+          </label>
+
         </div>
 
+
+
         <p className="mt-3 text-xs text-slate-500">
+
           Tip: Changing settings resets the timer only when it’s not running.
+
         </p>
+
       </div>
+
     </div>
+
   );
+
 }
