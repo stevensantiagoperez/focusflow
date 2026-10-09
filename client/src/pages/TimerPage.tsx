@@ -75,12 +75,6 @@ export default function TimerPage() {
     return (mode === "focus" ? focusMinutes : breakMinutes) * 60;
   }, [mode, focusMinutes, breakMinutes]);
 
-  const progress = useMemo(() => {
-    const total = totalSecondsForMode;
-    if (total <= 0) return 0;
-    return Math.min(1, Math.max(0, secondsLeft / total));
-  }, [secondsLeft, totalSecondsForMode]);
-
   useEffect(() => {
   const settings: TimerSettings = {
     focusMinutes,
