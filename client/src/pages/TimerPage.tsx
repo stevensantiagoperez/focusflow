@@ -60,15 +60,7 @@ export default function TimerPage() {
   })();
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(
-    savedSettings.selectedTaskId ?? null
-  );
   const [saveError, setSaveError] = useState<string | null>(null);
-
-
-
-  const [isRunning, setIsRunning] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(() => focusMinutes * 60);
 
   const [showCompletePrompt, setShowCompletePrompt] = useState(false);
   const [completedTaskTitle, setCompletedTaskTitle] = useState<string | null>(null);
