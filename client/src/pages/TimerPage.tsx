@@ -136,19 +136,6 @@ useEffect(() => {
     }
   }, [totalSecondsForMode, isRunning]);
 
-  // Ticking logic
-  useEffect(() => {
-    if (!isRunning) return;
-
-    intervalRef.current = window.setInterval(() => {
-      setSecondsLeft((prev) => Math.max(0, prev - 1));
-    }, 1000);
-
-    return () => {
-      if (intervalRef.current) window.clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    };
-  }, [isRunning]);
 
   // When timer hits 0, auto switch modes
   useEffect(() => {
