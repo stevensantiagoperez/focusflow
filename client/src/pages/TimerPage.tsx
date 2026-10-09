@@ -176,10 +176,6 @@ setToastMessage(
     finalize();
   }, [secondsLeft, isRunning, mode, focusMinutes, selectedTaskId]);
 
-  function toggleStartPause() {
-    setIsRunning((r) => !r);
-  }
-
   function resetTimer() {
     setIsRunning(false);
     setSecondsLeft(totalSecondsForMode);
