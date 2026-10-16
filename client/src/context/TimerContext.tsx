@@ -94,4 +94,176 @@ export function TimerProvider({ children }: { children: ReactNode }) {
       JSON.stringify({ focusMinutes, breakMinutes, selectedTaskId })
     );
   }, [focusMinutes, breakMinutes, selectedTaskId]);
+
+    // Reset the countdown when duration settings change
+  useEffect(() => {
+    if (!isRunning) {
+      setSecondsLeft(
+        (mode === "focus" ? focusMinutes : breakMinutes) * 60
+      );
+      setElapsedSeconds(0);
+    }
+    // Only react to duration edits, not start/pause
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusMinutes, breakMinutes]);
+
+  // Keep countdown running across pages
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const interval = window.setInterval(() => {
+      setSecondsLeft((previous) => Math.max(0, previous - 1));
+      setElapsedSeconds((previous) => previous + 1);
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [isRunning]);
+
+  // Handle completed sessions globally
+  useEffect(() => {
+    if (!isRunning || secondsLeft !== 0 || completionHandled.current) {
+      return;
+    }
+
+    completionHandled.current = true;
+    setIsRunning(false);
+
+    const finishedMode = mode;
+    const finishedTaskId = selectedTaskId;
+    const finishedElapsedSeconds = elapsedSeconds;
+
+    const nextMode: Mode =
+      finishedMode === "focus" ? "break" : "focus";
+
+    setMode(nextMode);
+    setSecondsLeft(
+      (nextMode === "focus" ? focusMinutes : breakMinutes) * 60
+    );
+    setElapsedSeconds(0);
+
+    if (finishedMode === "focus") {
+      setSaveError(null);
+
+      const session = {
+        id: crypto.randomUUID(),
+        taskId: finishedTaskId,
+        mode: "focus" as const,
+        durationSeconds: finishedElapsedSeconds,
+        endedAt: new Date().toISOString(),
+      };
+
+      void createSession(session)
+        .then(() => {
+          window.dispatchEvent(
+            new Event("focusflow:session-saved")
+          );
+
+          setToastMessage("🎉 Focus session saved");
+
+          if (finishedTaskId !== null) {
+            setCompletedTaskId(finishedTaskId);
+          }
+        })
+        .catch((e: unknown) => {
+          setSaveError(
+            e instanceof Error ? e.message : "Failed to save session"
+          );
+        });
+    }
+  }, [
+    secondsLeft,
+    isRunning,
+    mode,
+    focusMinutes,
+    breakMinutes,
+    selectedTaskId,
+    elapsedSeconds,
+  ]);
+
+  useEffect(() => {
+    if (!toastMessage) return;
+
+    const timeout = window.setTimeout(() => {
+      setToastMessage(null);
+    }, 3000);
+
+    return () => window.clearTimeout(timeout);
+  }, [toastMessage]);
+
+  function toggleStartPause() {
+    if (!isRunning) {
+      completionHandled.current = false;
+    }
+
+    if (!isRunning && secondsLeft === 0) {
+      setSecondsLeft(totalSeconds);
+    }
+
+    setIsRunning((running) => !running);
+  }
+
+  function resetTimer() {
+    completionHandled.current = false;
+    setIsRunning(false);
+    setSecondsLeft(totalSeconds);
+    setElapsedSeconds(0);
+  }
+
+  function adjustTime(deltaSeconds: number) {
+    if (!Number.isFinite(deltaSeconds)) return;
+
+    setSecondsLeft((previous) =>
+      Math.max(1, previous + Math.round(deltaSeconds))
+    );
+  }
+
+  function switchMode(nextMode: Mode) {
+    completionHandled.current = false;
+    setIsRunning(false);
+    setMode(nextMode);
+
+    setSecondsLeft(
+      (nextMode === "focus" ? focusMinutes : breakMinutes) * 60
+    );
+
+    setElapsedSeconds(0);
+  }
+
+  return (
+    <TimerContext.Provider
+      value={{
+        mode,
+        focusMinutes,
+        setFocusMinutes,
+        breakMinutes,
+        setBreakMinutes,
+        secondsLeft,
+        isRunning,
+        selectedTaskId,
+        setSelectedTaskId,
+        toggleStartPause,
+        resetTimer,
+        adjustTime,
+        switchMode,
+        progress,
+        completedTaskId,
+        clearCompletedTaskPrompt: () => setCompletedTaskId(null),
+        saveError,
+        toastMessage,
+      }}
+    >
+      {children}
+    </TimerContext.Provider>
+  );
+}
+
+// IMPORTANT: This must be OUTSIDE TimerProvider
+export function useTimer() {
+  const context = useContext(TimerContext);
+
+  if (!context) {
+    throw new Error("useTimer must be used inside TimerProvider");
+  }
+
+  return context;
 }
