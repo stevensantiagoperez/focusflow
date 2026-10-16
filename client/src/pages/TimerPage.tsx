@@ -361,6 +361,26 @@ export default function TimerPage() {
 
         </div>
 
+        <div className="mt-4 grid grid-cols-3 gap-2">
+  {[
+    { label: "−5 min", seconds: -300 },
+    { label: "−1 min", seconds: -60 },
+    { label: "−10 sec", seconds: -10 },
+    { label: "+10 sec", seconds: 10 },
+    { label: "+1 min", seconds: 60 },
+    { label: "+5 min", seconds: 300 },
+  ].map(({ label, seconds }) => (
+    <button
+      key={label}
+      type="button"
+      onClick={() => adjustTime(seconds)}
+      className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800"
+    >
+      {label}
+    </button>
+  ))}
+</div>
+
       </div>
 
 
