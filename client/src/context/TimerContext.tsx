@@ -1,3 +1,4 @@
+
 import {
   createContext,
   useContext,
@@ -22,6 +23,7 @@ type TimerContextType = {
   setSelectedTaskId: (id: number | null) => void;
   toggleStartPause: () => void;
   resetTimer: () => void;
+  adjustTime: (deltaSeconds: number) => void;
   switchMode: (mode: Mode) => void;
   progress: number;
   completedTaskId: number | null;
@@ -73,14 +75,17 @@ export function TimerProvider({ children }: { children: ReactNode }) {
     validMinutes(initial.focusMinutes, 25, 180) * 60
   );
   const [isRunning, setIsRunning] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [completedTaskId, setCompletedTaskId] = useState<number | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const completionHandled = useRef(false);
 
   const totalSeconds = (mode === "focus" ? focusMinutes : breakMinutes) * 60;
-  const progress = totalSeconds > 0
-    ? Math.min(1, Math.max(0, secondsLeft / totalSeconds))
+  // The ring adapts when time is added or subtracted mid-session.
+  const adjustedTotalSeconds = secondsLeft + elapsedSeconds;
+  const progress = adjustedTotalSeconds > 0
+    ? Math.min(1, Math.max(0, secondsLeft / adjustedTotalSeconds))
     : 0;
 
   useEffect(() => {
@@ -89,104 +94,4 @@ export function TimerProvider({ children }: { children: ReactNode }) {
       JSON.stringify({ focusMinutes, breakMinutes, selectedTaskId })
     );
   }, [focusMinutes, breakMinutes, selectedTaskId]);
-
-  // Duration edits reset the displayed countdown. Pausing does not.
-  useEffect(() => {
-    if (!isRunning) {
-      setSecondsLeft((mode === "focus" ? focusMinutes : breakMinutes) * 60);
-    }
-    // Only react to duration edits, not start/pause.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [focusMinutes, breakMinutes]);
-
-  // This interval lives above the router, so navigation doesn't stop it.
-  useEffect(() => {
-    if (!isRunning) return;
-    const interval = window.setInterval(() => {
-      setSecondsLeft((previous) => Math.max(0, previous - 1));
-    }, 1000);
-    return () => window.clearInterval(interval);
-  }, [isRunning]);
-
-  // Completion is handled globally, even when TimerPage isn't mounted.
-  useEffect(() => {
-    if (!isRunning || secondsLeft !== 0 || completionHandled.current) return;
-    completionHandled.current = true;
-    setIsRunning(false);
-
-    const finishedMode = mode;
-    const finishedTaskId = selectedTaskId;
-    const finishedFocusMinutes = focusMinutes;
-    const nextMode: Mode = finishedMode === "focus" ? "break" : "focus";
-    setMode(nextMode);
-    setSecondsLeft((nextMode === "focus" ? focusMinutes : breakMinutes) * 60);
-
-    if (finishedMode === "focus") {
-      setSaveError(null);
-      const session = {
-        id: crypto.randomUUID(),
-        taskId: finishedTaskId,
-        mode: "focus" as const,
-        durationSeconds: finishedFocusMinutes * 60,
-        endedAt: new Date().toISOString(),
-      };
-      void createSession(session)
-        .then(() => {
-          // Tell open pages to reload their saved session totals.
-          window.dispatchEvent(new Event("focusflow:session-saved"));
-          setToastMessage("🎉 Focus session saved");
-          if (finishedTaskId !== null) setCompletedTaskId(finishedTaskId);
-        })
-        .catch((e: unknown) => {
-          setSaveError(e instanceof Error ? e.message : "Failed to save session");
-        });
-    }
-  }, [secondsLeft, isRunning, mode, focusMinutes, breakMinutes, selectedTaskId]);
-
-  useEffect(() => {
-    if (!toastMessage) return;
-    const timeout = window.setTimeout(() => setToastMessage(null), 3000);
-    return () => window.clearTimeout(timeout);
-  }, [toastMessage]);
-
-  function toggleStartPause() {
-    if (!isRunning) completionHandled.current = false;
-    if (!isRunning && secondsLeft === 0) setSecondsLeft(totalSeconds);
-    setIsRunning((running) => !running);
-  }
-
-  function resetTimer() {
-    completionHandled.current = false;
-    setIsRunning(false);
-    setSecondsLeft(totalSeconds);
-  }
-
-  function switchMode(nextMode: Mode) {
-    completionHandled.current = false;
-    setIsRunning(false);
-    setMode(nextMode);
-    setSecondsLeft((nextMode === "focus" ? focusMinutes : breakMinutes) * 60);
-  }
-
-  return (
-    <TimerContext.Provider value={{
-      mode,
-      focusMinutes, setFocusMinutes,
-      breakMinutes, setBreakMinutes,
-      secondsLeft, isRunning,
-      selectedTaskId, setSelectedTaskId,
-      toggleStartPause, resetTimer, switchMode, progress,
-      completedTaskId,
-      clearCompletedTaskPrompt: () => setCompletedTaskId(null),
-      saveError, toastMessage,
-    }}>
-      {children}
-    </TimerContext.Provider>
-  );
-}
-
-export function useTimer() {
-  const context = useContext(TimerContext);
-  if (!context) throw new Error("useTimer must be used inside TimerProvider");
-  return context;
 }
