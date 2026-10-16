@@ -39,6 +39,7 @@ export default function TimerPage() {
     clearCompletedTaskPrompt,
     saveError,
     toastMessage,
+    adjustTime,
   } = useTimer();
 
   const [tasks, setTasks] = useState<Task[]>([]);
