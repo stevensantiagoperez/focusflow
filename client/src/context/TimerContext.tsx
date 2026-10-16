@@ -132,6 +132,8 @@ export function TimerProvider({ children }: { children: ReactNode }) {
       };
       void createSession(session)
         .then(() => {
+          // Tell open pages to reload their saved session totals.
+          window.dispatchEvent(new Event("focusflow:session-saved"));
           setToastMessage("🎉 Focus session saved");
           if (finishedTaskId !== null) setCompletedTaskId(finishedTaskId);
         })
