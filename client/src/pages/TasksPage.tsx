@@ -48,26 +48,23 @@ export default function TimerPage() {
   const taskIdParam = searchParams.get("taskId");
 
   useEffect(() => {
-    let active = true;
-    getTasks()
-      .then((data: Task[]) => {
-        if (!active) return;
-        setTasks(data);
-        const fromUrl = taskIdParam !== null ? Number(taskIdParam) : null;
-        if (fromUrl !== null && data.some((t) => t.id === fromUrl)) {
-          setSelectedTaskId(fromUrl);
-        } else if (selectedTaskId === null) {
-          const firstOpen = data.find((t) => !t.completed);
-          if (firstOpen) setSelectedTaskId(firstOpen.id);
-        }
-      })
-      .catch(() => {
-        // Timer remains usable even if tasks cannot load.
-      });
-    return () => { active = false; };
-    // Only reload when the taskId URL parameter changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskIdParam, setSelectedTaskId]);
+  getTasks()
+    .then((data) => {
+      console.log("Tasks loaded:", data);
+      setTasks(data);
+    })
+    .catch((err) => {
+      console.error("Failed to load tasks:", err);
+      setError("Failed to load tasks");
+    })
+    .finally(() => setLoading(false));
+
+  getSessions()
+    .then(setSessions)
+    .catch((err) => {
+      console.error("Failed to load sessions:", err);
+    });
+}, []);
 
   async function markSelectedTaskComplete() {
     if (completedTaskId === null) return;
