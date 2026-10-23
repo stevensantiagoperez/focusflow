@@ -1,98 +1,97 @@
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { getTasks, updateTask, getSessions, createTask, deleteTask } from "../services/apiClient";
-import { useTimer } from "../context/TimerContext";
+
+import { Link } from "react-router-dom";
+
+import { useEffect, useMemo, useState } from "react";
+
+import type { FormEvent } from "react";
+
+import {
+
+  getTasks,
+
+  createTask,
+
+  deleteTask,
+
+  updateTask,
+
+  getSessions,
+
+} from "../services/apiClient";
+
+import type { FocusSession } from "../services/apiClient";
 
 type Task = {
+
   id: number;
+
   title: string;
+
   completed: boolean;
+
   goalMinutes: number;
+
 };
 
-function pad2(n: number) {
-  return n.toString().padStart(2, "0");
-}
-
-function formatMMSS(totalSeconds: number) {
-  const m = Math.floor(totalSeconds / 60);
-  const s = totalSeconds % 60;
-  return `${pad2(m)}:${pad2(s)}`;
-}
-
-export default function TimerPage() {
-  const {
-    mode,
-    focusMinutes,
-    setFocusMinutes,
-    breakMinutes,
-    setBreakMinutes,
-    secondsLeft,
-    isRunning,
-    selectedTaskId,
-    setSelectedTaskId,
-    toggleStartPause,
-    resetTimer,
-    adjustTime,
-    switchMode,
-    progress,
-    completedTaskId,
-    clearCompletedTaskPrompt,
-    saveError,
-    toastMessage,
-  } = useTimer();
+export default function TasksPage() {
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [completeError, setCompleteError] = useState<string | null>(null);
-  const [searchParams] = useSearchParams();
-  const taskIdParam = searchParams.get("taskId");
+
+  const [newTitle, setNewTitle] = useState("");
+
   const [loading, setLoading] = useState(true);
 
+  const [error, setError] = useState<string | null>(null);
+
+  const [sessions, setSessions] = useState<FocusSession[]>([]);
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const [prevGoalReachedMap, setPrevGoalReachedMap] = useState<Record<number, boolean>>({});
+
+  const [filter, setFilter] = useState<"all" | "active" | "completed" | "goalReached">("all");
+
+  const [sortBy, setSortBy] = useState<"newest" | "mostProgress">("newest");
+
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+
+  const [editTitle, setEditTitle] = useState("");
+
+  const [editGoalMinutes, setEditGoalMinutes] = useState("");
+
+  // Load tasks independently so a session API failure cannot hide tasks.
   useEffect(() => {
-  getTasks()
-    .then((data) => {
-      console.log("Tasks loaded:", data);
-      setTasks(data);
-    })
-    .catch((err) => {
-      console.error("Failed to load tasks:", err);
-      setError("Failed to load tasks");
-    })
-    .finally(() => setLoading(false));
+    getTasks()
+      .then(setTasks)
+      .catch((err: unknown) => {
+        setError(err instanceof Error ? err.message : "Failed to load tasks");
+      })
+      .finally(() => setLoading(false));
 
-  getSessions()
-    .then(setSessions)
-    .catch((err) => {
-      console.error("Failed to load sessions:", err);
-    });
-}, []);
+    getSessions()
+      .then(setSessions)
+      .catch((err: unknown) => {
+        console.error("Failed to load focus sessions:", err);
+      });
+  }, []);
 
-  async function markSelectedTaskComplete() {
-    if (completedTaskId === null) return;
-    setCompleteError(null);
-    try {
-      await updateTask(completedTaskId, { completed: true });
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === completedTaskId ? { ...t, completed: true } : t
-        )
-      );
-      clearCompletedTaskPrompt();
-    } catch (e: unknown) {
-      setCompleteError(e instanceof Error ? e.message : "Failed to complete task");
-    }
-  }
+  // Refresh saved focus totals if a session completes while this page is open.
+  useEffect(() => {
+    let active = true;
+    const refreshSessions = () => {
+      getSessions()
+        .then((data) => {
+          if (active) setSessions(data);
+        })
+        .catch((err: unknown) => {
+          if (active) setError(err instanceof Error ? err.message : "Failed to refresh focus sessions");
+        });
+    };
 
-  return (
-  <div className="space-y-6">
+    window.addEventListener("focusflow:session-saved", refreshSessions);
+    return () => {
+      active = false;
+      window.removeEventListener("focusflow:session-saved", refreshSessions);
+    };
+  }, []);
 
-    {toastMessage && (
-      <div className="fixed top-20 right-4 z-50 rounded-lg border border-emerald-700/60 bg-emerald-950/90 px-4 py-3 text-sm text-emerald-200 shadow-lg backdrop-blur">
-        {toastMessage}
-      </div>
-    )}
-
-    {/* Keep the rest of your TasksPage JSX here */}
-
-  </div>
-)}
