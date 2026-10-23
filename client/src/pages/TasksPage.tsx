@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getTasks, updateTask } from "../services/apiClient";
+import { getTasks, updateTask, getSessions } from "../services/apiClient";
 import { useTimer } from "../context/TimerContext";
 
 type Task = {
