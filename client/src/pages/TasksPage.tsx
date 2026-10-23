@@ -46,6 +46,7 @@ export default function TimerPage() {
   const [completeError, setCompleteError] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const taskIdParam = searchParams.get("taskId");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
   getTasks()
