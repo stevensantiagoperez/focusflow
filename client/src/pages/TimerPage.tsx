@@ -33,13 +33,13 @@ export default function TimerPage() {
     setSelectedTaskId,
     toggleStartPause,
     resetTimer,
+    adjustTime,
     switchMode,
     progress,
     completedTaskId,
     clearCompletedTaskPrompt,
     saveError,
     toastMessage,
-    adjustTime,
   } = useTimer();
 
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -361,25 +361,22 @@ export default function TimerPage() {
 
         </div>
 
-        <div className="mt-4 grid grid-cols-3 gap-2">
-  {[
-    { label: "−5 min", seconds: -300 },
-    { label: "−1 min", seconds: -60 },
-    { label: "−10 sec", seconds: -10 },
-    { label: "+10 sec", seconds: 10 },
-    { label: "+1 min", seconds: 60 },
-    { label: "+5 min", seconds: 300 },
-  ].map(({ label, seconds }) => (
-    <button
-      key={label}
-      type="button"
-      onClick={() => adjustTime(seconds)}
-      className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800"
-    >
-      {label}
-    </button>
-  ))}
-</div>
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          {[-300, -60, -10, 10, 60, 300].map((delta) => (
+            <button
+              key={delta}
+              type="button"
+              onClick={() => adjustTime(delta)}
+              className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-xs font-medium text-slate-200 hover:border-violet-500 hover:bg-slate-800 transition-colors"
+              aria-label={`${delta > 0 ? "Add" : "Subtract"} ${Math.abs(delta) >= 60 ? `${Math.abs(delta) / 60} minutes` : `${Math.abs(delta)} seconds`}`}
+            >
+              {delta > 0 ? "+" : "−"}{Math.abs(delta) >= 60 ? `${Math.abs(delta) / 60}m` : `${Math.abs(delta)}s`}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-center text-xs text-slate-500">
+          Adjust the remaining time without pausing the countdown.
+        </p>
 
       </div>
 
